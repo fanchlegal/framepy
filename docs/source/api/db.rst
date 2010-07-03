@@ -28,8 +28,7 @@ You can then create new Article, like this::
 
 You can query your articles using query interface provided, like::
 
-    articles = Article.all().filter('pubdate >= :pubdate',
-                                     pubdate=somedate) \\
+    articles = Article.all().filter('pubdate >=', somedate) \\
                             .order('-pubdate')
     for article in articles:
         print article.title
@@ -45,7 +44,6 @@ like::
         pubdate = db.DateTime(default_now=True)
         text = db.Text(required=True)
 
-        @db.validate(title)
         def validate_title(self, value):
             if len(value) < 5:
                 raise db.ValidationError('Title too short...')
@@ -215,13 +213,4 @@ Proceed with the :class:`Query` documentation for more details...
 .. autoclass:: Query
     :members:
 
-
-Helpers
--------
-
-.. autofunction:: meta
-
-.. autofunction:: validate
-
-.. autofunction:: unique
 

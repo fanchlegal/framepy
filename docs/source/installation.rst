@@ -20,6 +20,8 @@ Prerequisite
 * Jinja2 >= 2.4.1
 * simplejson >= 2.1.1 (not required for py2.6)
 * Pygments >= 1.3.1 (optional, to see colourful output on terminal)
+* MySQLdb >= 1.2.1 (optional, if you want to use MySQL backend engine)
+* psycopg2 >= 2.2.1 (optional, if you want to use PostgreSQL backend engine)
 
 I assume you already have Python installed on you system.
 

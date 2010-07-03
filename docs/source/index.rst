@@ -1,10 +1,10 @@
 Welcome to KalaPy
 =================
 
-Welcome to the *KalaPy's* documentation. *KalaPy* is a new web application
-framework for `Python`_ providing it's own :ref:`Database Abstraction Layer <dal>`,
-web components based on `Werkzeug`_, templating using powerful `Jinja2`_ template
-engine and more...
+Welcome to the *KalaPy's* documentation. *KalaPy* is a web application framework
+for `Python`_ providing it's own :ref:`Database Abstraction Layer <dal>`, web
+components based on `Werkzeug`_, templating using powerful `Jinja2`_ template
+engine and full internationalization support.
 
 .. _Jinja2: http://jinja.pocoo.org/2/
 .. _Werkzeug: http://werkzeug.pocoo.org/

@@ -44,7 +44,7 @@ directory with following contents::
 The `models.py` is where you should define you models and `views.py` is where
 you should define you view functions.
 
-You can use the `static` directory to server static contents and the `templates`
+You can use the `static` directory to serve static contents and the `templates`
 directory should hold all the templates for the views.
 
 The application package created here needs to be activated from the `settings`
@@ -73,7 +73,6 @@ Models should be defined under `models.py` like this::
         pubdate = db.DateTime(default_now=True)
         text = db.Text(required=True)
 
-        @db.validate(title)
         def validate_title(self, value):
             if len(value) < 5:
                 raise db.ValidationError('Title too short...')
@@ -97,8 +96,8 @@ settings::
     DATABASE_ENGINE = "sqlite3"
     DATABASE_NAME = "test_hello.sqlite"
 
-Currently, `sqlite3` and `postgresql` backend engines are supported. For simplicity
-let you use `sqlite3` for this demo project.
+KalaPy supports `sqlite3`, `postgresql`, `mysql` and `gae` backend engines.
+For simplicity let you use `sqlite3` for this demo project.
 
 Now as you have configured you database setup, next step is to create database
 and required tables for the defined models.
@@ -107,7 +106,7 @@ First create the database file:
 
 .. sourcecode:: bash
 
-    $ touch test_hello.sqlite
+    $ touch test_hello.db
 
 Then create tables:
 
@@ -136,7 +135,8 @@ package like this:
         "key" INTEGER PRIMARY KEY AUTOINCREMENT,
         "title" VARCHAR(100) NOT NULL,
         "text" TEXT,
-        "article" INTEGER REFERENCES "foo_article" ("key")
+        "article" INTEGER,
+        FOREIGN KEY ("article") REFERENCES "foo_article" ("key")
     );
 
 The output varies depending on the database backend you have selected. Use `help`
@@ -172,7 +172,7 @@ Let's check with shell::
     >>> article.save()
     >>> db.commit()
     >>> articles = Article.all().fetch(10)
-    >>> for article in articales:
+    >>> for article in articles:
     ...     print article.title
 
 
@@ -200,7 +200,7 @@ Start the development server
 ----------------------------
 
 As you have defined your views, it's time to see it in action. *KalaPy* provides
-a simple server for development purpose which can be lauched using the admin
+a simple server for development purpose which can be launched using the admin
 script like:
 
 .. sourcecode:: bash
