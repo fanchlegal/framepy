@@ -49,6 +49,7 @@ class Field(object):
         - a list of (value, string) tuple to restrict the input value to be
           one of the key.
         - a callable that returns a list of (value, string) tuple
+    :param validator: a validator function to validate the field values
     """
 
     # for internal use only
@@ -57,7 +58,7 @@ class Field(object):
     _data_type = "char"
 
     def __init__(self, label=None, name=None, default=None, required=False,
-        unique=False, indexed=False, selection=None):
+        unique=False, indexed=False, selection=None, validator=None):
         """Create a new instance of this :class:`Field`.
         """
 
@@ -74,7 +75,7 @@ class Field(object):
         self._selection = selection() if callable(selection) else selection
         self._selection_list = [x[0] for x in self._selection] if self._selection else []
 
-        self._validator = None
+        self._validator = validator
 
     def __repr__(self):
         return "<Field %s name='%s'>" % (self.__class__.__name__, self.name)
