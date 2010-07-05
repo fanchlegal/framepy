@@ -5,14 +5,17 @@
 Database Abstraction Layer
 ==========================
 
-An unique database abstraction layer (DAL) inspired of OpenERP and Django ORM.
-The DAL API is designed such that it can work with any kind of database management
-system, be it an RDBMS or NoSQL, or even can be used with OpenERP.
+*KalaPy* provide a Database Abstraction Layer (DAL), an API that maps Python
+objects to database objects. The API is designed such that it can work with
+any kind of database management system, be it an RDBMS or NoSQL databases.
+Currently, it supports SQLite3, PostgreSQL, MySQL and Google App Engine (GAE).
 
 A programming model should be declared as a subclass of :class:`Model`,
 declaring properties as any of :class:`Field` subclass. So if you want to
 publish an article with title, text, and publishing date, you would do it
 like this::
+
+    from kalapy import db
 
     class Article(db.Model):
         title = db.String(size=100, required=True)
@@ -28,25 +31,35 @@ You can then create new Article, like this::
 
 You can query your articles using query interface provided, like::
 
-    articles = Article.all().filter('pubdate >=', somedate) \\
+    articles = Article.all().filter('pubdate >=', somedate) \
                             .order('-pubdate')
     for article in articles:
         print article.title
 
 The inputs will be validated according to the properties to which it is being
-assigned. That is, a `db.DateTime` property can only be assigned a valid datetime
-value (real python datetime.datetime, or string representation of datetime).
-Beside that you can also validate input using `db.validate` decorator,
-like::
+assigned. That is, a :class:`db.DateTime` property can only be assigned a valid
+``datetime`` value (real python :class:`datetime.datetime`, or string representation
+of ``datetime``).  Beside that you can also validate input by providing a validator
+function while defining a field with `validator` argument or by defining a method
+in the model class with ``validate_`` as prefix. For example::
+
+    def check_terms(value):
+        if 'some_dirty_word' in value:
+            raise db.ValidationError("doesn't follow the terms and conditions")
 
     class Article(db.Model):
         title = db.String(size=100, required=True)
         pubdate = db.DateTime(default_now=True)
-        text = db.Text(required=True)
+        text = db.Text(required=True, validator=check_terms)
 
         def validate_title(self, value):
             if len(value) < 5:
                 raise db.ValidationError('Title too short...')
+
+
+The ``check_terms`` function is associated as a validator for ``text`` field
+while the ``validate_title`` method is explicitly associated with ``title`` field
+as validator.
 
 You can also relate models using any of the provided reference fields to
 represent many-to-one, one-to-one, one-to-many or many-to-many relationships
@@ -57,8 +70,8 @@ among them. For example::
         text = db.Text()
         article = db.ManyToOne(Article)
 
-A reverse lookup field named `comment_set` will be automatically created
-in the `Article` model. Reference properties can be accessed like this::
+A reverse lookup field named ``comment_set`` will be automatically created
+in the ``Article`` model. Reference properties can be accessed like this::
 
     comment = Comment.get(key)
     print comment.article.title
@@ -67,6 +80,10 @@ in the `Article` model. Reference properties can be accessed like this::
     for comment in article.comment_set.all().fetch(-1):
         print comment.title
 
+The model class has a special readonly field named ``key`` that defines *primary
+key* of your data model. The datatype of `key` value depends on the underlying
+database engine. For RDBMS, it is generally an integer but for GAE it is a string
+value.
 
 Model
 -----
@@ -163,20 +180,12 @@ This is equivalent to:
 The query string accepted by filter method is constructed by two components where
 the LHS is a name of a field in the give model and RHS is an operator.
 
-The exact syntax of the query statement should be like:
-
-.. sourcecode:: antlr-python
-
-    statement   ::=     identifier operator
-    identifier  ::=     ("a"..."z"|"A"..."Z"|"_")("a"..."z"|"A"..."Z"|"0".."9"|"_")*
-    operator    ::=     "=" | "==" | "!=" | ">" | "<" | ">=" | "<=" | ["not"] "in"
-
 The query string supports following operators:
 
-    ============= ==========================
+    ============= ==============================
     Operator      Meaning
-    ============= ==========================
-    `=`           case insensitive match
+    ============= ==============================
+    `=`           like match
     `==`          exact match
     `>`           greater then
     `<`           less then
@@ -185,7 +194,7 @@ The query string supports following operators:
     `!=`          not equal to
     `in`          within the given items
     `not in`      not within the give items
-    ============= ==========================
+    ============= ==============================
 
 For convenience, all of the filtering and ordering methods return "self", so
 you can chain method calls like this::
@@ -203,14 +212,37 @@ This is equivalent to:
         'name' LIKE '%some%' AND 'age' >= 18 AND 'lang' IN ('en', 'hi', 'gu')
     ORDER BY 'country' DESC LIMIT 100
 
+You can see that multiple ``filter`` call results an ``ANDed`` expression. You can
+generate ``ORed`` result using :class:`Q` like this::
+
+    from kalapy.db import Query, Q
+
+    users = Query(User).filter(
+        Q('name =', 'some')|Q('lang in', ['en', 'hi', 'gu']))
+
+This is equivalent to:
+
+.. sourcecode:: sql
+
+    SELECT * FROM 'user' WHERE
+        'name' LIKE '%some%' OR 'lang' IN ('en', 'hi', 'gu')
+
+
+This way you can build a complex query with ``AND`` and ``OR`` expressions.
+However, the API doesn't support ``JOIN`` of multiple data models.
+
 .. note::
 
-    The ``OR`` operator is not supported at the moment. However, you can use
-    ``IN`` operator, which provides a limited form of ``OR``.
+    The GAE backend does not support all of the operators because of the
+    limitations imposed by GAE datastore API. The ``=`` operator will be
+    considered as ``==`` in this case and the ``not in`` operator is not
+    supported at all.
 
 Proceed with the :class:`Query` documentation for more details...
 
-.. autoclass:: Query
+.. autoclass:: Q
     :members:
 
+.. autoclass:: Query
+    :members:
 

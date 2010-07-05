@@ -367,6 +367,10 @@ class Model(object):
     >>> u = User(name="some")
     >>> u.save()
 
+    `key`
+
+        Represents the key field for the data model (primary key).
+
     :param kw: keyword arguments mapping to instance properties.
     """
 
@@ -559,7 +563,7 @@ class Model(object):
         """Returns a :class:`Query` object over all instances of this model from
         the database.
 
-        :returns: :class:`Query` instance
+        :returns: an :class:`Query` instance
         """
         return Query(cls)
 
@@ -580,7 +584,7 @@ class Model(object):
 
         :arg fields: sequence of fields
 
-        :returns: :class:`Query` instance
+        :returns: an :class:`Query` instance
         """
         def mapper(obj):
             if not fields:
