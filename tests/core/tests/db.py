@@ -199,6 +199,34 @@ class QueryTest(TestCase):
 
         self.assertEqual(r1, r2)
 
+    def test_like(self):
+        User.all().delete()
+        for n in ['some', 'thing', 'something', 'thingsome', 'ThingSomeThing']:
+            u = User(name=n)
+            u.save()
+
+        q = User.select('name').filter('name =', '%some%').order('name')
+        self.assertEqual(q.fetchall(), ['some', 'something', 'thingsome', 'ThingSomeThing'])
+
+        q = User.select('name').filter('name =', '%some').order('name')
+        self.assertEqual(q.fetchall(), ['some', 'thingsome'])
+
+        q = User.select('name').filter('name =', 'some%').order('name')
+        self.assertEqual(q.fetchall(), ['some', 'something'])
+
+        q = User.select('name').filter('name =', 'some')
+        self.assertEqual(q.fetchall(), ['some'])
+
+    def test_not_in(self):
+        User.all().delete()
+        for n in ['some', 'thing', 'something', 'thingsome']:
+            u = User(name=n)
+            u.save()
+
+        q = User.select('name').filter('name not in', ['some', 'thing']).order('name')
+        assert q.count() == 2
+        self.assertEqual(q.fetchall(), ['something', 'thingsome'])
+
     def test_delete(self):
 
         for n in list('abcdefghijklmnopqrstuvwxyz'):
