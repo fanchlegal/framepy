@@ -167,7 +167,7 @@ A :class:`Query` instance queries over instances of :class:`Model`.
 
 You can create a :class:`Query` instance with a model class like this::
 
-    users = Query(User).filter('name =', 'some') \
+    users = Query(User).filter('name =', 'some%') \
                        .order('-name') \
                        .fetch(10)
 
@@ -175,7 +175,7 @@ This is equivalent to:
 
 .. sourcecode:: sql
 
-    SELECT * FROM 'user' WHERE 'name' like '%some%' ORDER BY 'name' DESC LIMIT 10
+    SELECT * FROM 'user' WHERE 'name' LIKE 'some%' ORDER BY 'name' DESC LIMIT 10
 
 The query string accepted by filter method is constructed by two components where
 the LHS is a name of a field in the give model and RHS is an operator.
@@ -199,7 +199,7 @@ The query string supports following operators:
 For convenience, all of the filtering and ordering methods return "self", so
 you can chain method calls like this::
 
-    users = Query(User).filter('name =', 'some') \
+    users = Query(User).filter('name =', 'some%') \
                        .filter('age >=', 18) \
                        .filter('lang in', ['en', 'hi', 'gu']) \
                        .order('-age').fetch(100)
@@ -209,7 +209,7 @@ This is equivalent to:
 .. sourcecode:: sql
 
     SELECT * FROM 'user' WHERE
-        'name' LIKE '%some%' AND 'age' >= 18 AND 'lang' IN ('en', 'hi', 'gu')
+        'name' LIKE 'some%' AND 'age' >= 18 AND 'lang' IN ('en', 'hi', 'gu')
     ORDER BY 'country' DESC LIMIT 100
 
 You can see that multiple ``filter`` call results an ``ANDed`` expression. You can
@@ -218,25 +218,18 @@ generate ``ORed`` result using :class:`Q` like this::
     from kalapy.db import Query, Q
 
     users = Query(User).filter(
-        Q('name =', 'some')|Q('lang in', ['en', 'hi', 'gu']))
+        Q('name =', 'some%')|Q('lang in', ['en', 'hi', 'gu']))
 
 This is equivalent to:
 
 .. sourcecode:: sql
 
     SELECT * FROM 'user' WHERE
-        'name' LIKE '%some%' OR 'lang' IN ('en', 'hi', 'gu')
+        'name' LIKE 'some%' OR 'lang' IN ('en', 'hi', 'gu')
 
 
 This way you can build a complex query with ``AND`` and ``OR`` expressions.
 However, the API doesn't support ``JOIN`` of multiple data models.
-
-.. note::
-
-    The GAE backend does not support all of the operators because of the
-    limitations imposed by GAE datastore API. The ``=`` operator will be
-    considered as ``==`` in this case and the ``not in`` operator is not
-    supported at all.
 
 Proceed with the :class:`Query` documentation for more details...
 

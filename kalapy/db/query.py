@@ -22,7 +22,7 @@ class Q(object):
     """Encapsulates query filters as objects that can then be used to perform
     logical ``OR`` operation using ``|`` operator. For example::
 
-        q = Query(User).filter(Q('name =', 'some')|Q('age >=', 18))
+        q = Query(User).filter(Q('name =', 'some%')|Q('age >=', 18))
 
     The ``AND`` operation is not supported as ``AND`` is the default behaviour
     of multiple :func:`Query.filter` calls.
@@ -108,25 +108,25 @@ class Query(object):
     """The `Query` class provides methods to filter and fetch records from the
     database with simple pythonic statements.
 
-    >>> users = Query(User).filter("name =", "some") \
-    ...                    .filter("age >", 18)
-    >>> users.order("-age")
+    >>> users = Query(User).filter('name =', 'some%') \
+    ...                    .filter('age >', 18)
+    >>> users.order('-age')
     >>> first_ten = users.fetch(10, offset=0)
     >>> for user in first_ten:
-    >>>     print "Name:", user.name
+    >>>     print 'Name:', user.name
 
     The format of the query string should be ``field_name operator``, where
     ``field_name`` is any field defined in the current model and `openrator` can
     be one of ``=, ==, !=, <, >, <=, >=, in, not in``.
 
     Also, ``=`` operator has special meaning, it stands for case-insensitive
-    match (ilike in some DBMS). You should use ``==`` for exact match.
+    match (LIKE in some DBMS). You should use ``==`` for exact match.
 
     An instance of :class:`Query` can be constructed by passing :class:`Model`
     subclass as first argument. The contructor also accept a callable as a second
     argument to apply map on the result set.
 
-    >>> names = Query(User, lambda obj: obj.name).filter('name =', 'some').fetch(-1)
+    >>> names = Query(User, lambda obj: obj.name).filter('name =', 'some%').fetch(-1)
     >>> print names
     ['some', 'someone', 'some1']
 
@@ -151,7 +151,7 @@ class Query(object):
 
         For example::
 
-            q = Query(User).filter('name =', 'some').filter(age >=', 20)
+            q = Query(User).filter('name =', 'some%').filter(age >=', 20)
             q1 = q.filter('dob >=', '2001-01-01')
             q2 = q.filter('dob <', '2001-01-01')
 
@@ -159,7 +159,7 @@ class Query(object):
 
             from kalapy.db import Query, Q
 
-            q = Query(User).filter(Q('name =', 'some') | Q(age >=', 20))
+            q = Query(User).filter(Q('name =', 'some%') | Q(age >=', 20))
             q.fetchall()
 
         :param query: The query string or an instance of :class:`db.Q`
@@ -181,7 +181,7 @@ class Query(object):
     def order(self, spec):
         """Order the query result with given spec.
 
-        >>> q = Query(User).filter("name = ", "some").filter("age >=", 20)
+        >>> q = Query(User).filter("name =", "some%").filter("age >=", 20)
         >>> q.order("-age")
 
         :param spec: field name, if prefixed with `-` order by DESC else ASC
@@ -197,7 +197,7 @@ class Query(object):
 
         If limit is `-1` fetch all records.
 
-        >>> q = Query(User).filter("name =", "some").filter("age >=", 20)
+        >>> q = Query(User).filter("name =", "some%").filter("age >=", 20)
         >>> for obj in q.fetch(20):
         >>>     print obj.name
 
@@ -243,9 +243,9 @@ class Query(object):
 
         For example:
 
-        >>> Query(User).filter('name =', 'some').delete()
+        >>> Query(User).filter('name =', 'some%').delete()
 
-        will delete all the User records matching the name like 'some'
+        will delete all the User records by matching name starting with 'some'.
         """
         for obj in self.fetch(-1):
             obj.delete()
@@ -256,10 +256,10 @@ class Query(object):
 
         For example:
 
-        >>> Query(User).filter('name =', 'some').update(lang='en_EN')
+        >>> Query(User).filter('name =', 'some%').update(lang='en_EN')
 
-        will update all the User records matching name like 'some' by updating
-        `lang` to `en_EN`.
+        will update all the User records by matching name starting with 'some'
+        by updating `lang` to `en_EN`.
 
         :keyword kw: keyword args mapping to the field properties
         """
