@@ -10,7 +10,7 @@ PostgreSQL backend engine.
 import psycopg2 as dbapi
 from psycopg2.extensions import UNICODE
 
-from kalapy.db.engines.relational import RelationalDatabase
+from kalapy.db.engines.relational import RelationalDatabase, QueryBuilder
 
 
 __all__ = ('DatabaseError', 'IntegrityError', 'Database')
@@ -70,4 +70,13 @@ class Database(RelationalDatabase):
     def lastrowid(self, cursor, model):
         cursor.execute('SELECT last_value FROM "%s_key_seq"' % model._meta.table)
         return cursor.fetchone()[0]
+
+    def query_builder(self, qset):
+        return QueryBuilder(qset)
+
+
+class QueryBuilder(QueryBuilder):
+
+    def handle_like(self, name, value):
+        return '"%s" ILIKE %%s' % (name)
 

@@ -16,7 +16,7 @@ from kalapy.db.model import Model
 from kalapy.db.reference import ManyToOne
 
 
-__all__ = ('RelationalDatabase',)
+__all__ = ('RelationalDatabase', 'QueryBuilder',)
 
 
 class RelationalDatabase(IDatabase):
@@ -186,9 +186,12 @@ class RelationalDatabase(IDatabase):
 
         return keys
 
+    def query_builder(self, qset):
+        return QueryBuilder(qset)
+
     def fetch(self, qset, limit, offset):
         cursor = self.cursor()
-        sql, params = QueryBuilder(qset).select('*', limit, offset)
+        sql, params = self.query_builder(qset).select('*', limit, offset)
         cursor.execute(self.fix_quote(sql), params)
         names = [desc[0] for desc in cursor.description]
         for row in cursor.fetchall():
@@ -196,7 +199,7 @@ class RelationalDatabase(IDatabase):
 
     def count(self, qset):
         cursor = self.cursor()
-        sql, params = QueryBuilder(qset).select('count("key")')
+        sql, params = self.query_builder(qset).select('count("key")')
         sql = re.sub(' ORDER BY "\w+" (ASC|DESC)', '', sql)
         cursor.execute(self.fix_quote(sql), params)
         try:
