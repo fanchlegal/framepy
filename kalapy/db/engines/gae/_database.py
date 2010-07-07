@@ -7,6 +7,7 @@ Implementes Google AppEngine backend.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
+import re
 from itertools import chain
 
 try:
@@ -172,13 +173,17 @@ class Database(IDatabase):
 
         def _query(item):
             name, op, value = item
-            if op == 'in':
+            if op == '=':
+                return LikeQuery(kind, name, value, orderings)
+            elif op == 'not in':
+                return NotInQuery(kind, name, value, orderings)
+            elif op == 'in':
                 return MultiQuery(
                     [Query(kind, {'%s =' % name: v}, orderings) for v in value], orderings)
             elif op == '!=':
                 return MultiQuery(
                     [Query(kind, {'%s <' % name: value}, orderings),
-                     Query(kind, {'%s >' % name: value}), orderings], orderings)
+                     Query(kind, {'%s >' % name: value}, orderings)], orderings)
             else:
                 return Query(kind, {'%s %s' % (name, op): value}, orderings)
 
@@ -197,7 +202,8 @@ class Database(IDatabase):
 
 
 class Query(datastore.Query):
-
+    """This class extends ``datastore.Query`` class to handles `key` filters.
+    """
     def __init__(self, kind, filters, orderings=None):
         super(Query, self).__init__(kind, filters)
         if orderings:
@@ -216,6 +222,82 @@ class Query(datastore.Query):
             return iter([None])
         except KeyError:
             return super(Query, self).Run(**kwargs)
+
+
+class CustomQuery(Query):
+    """This call is used to implement custom query classes to handle
+    filters not supported by appengine datastore api.
+
+    The subclasses should override :meth:`validate` method to filter
+    the final result.
+
+    :param kind: entity type
+    :param find: name of the entity property on which filter it applied.
+    :param value: the value passed to the filter.
+    :param orderings: order specs
+    """
+
+    def __init__(self, kind, field, value, orderings=None):
+        super(CustomQuery, self).__init__(kind, {}, orderings)
+        self.field = field
+        self.value = value
+
+    def validate(self, value):
+        """Validate the value and return True or False.
+        """
+        raise NotImplementedError
+
+    def Get(self, limit, offset):
+        final = []
+        while len(final) < limit:
+            result = super(CustomQuery, self).Get(limit, offset)
+            if not result:
+                break
+            for item in result:
+                if self.validate(item[self.field]):
+                    final.append(item)
+            offset += limit
+        return final
+
+
+class NotInQuery(CustomQuery):
+    """Implements ``not in`` filter.
+    """
+    def __init__(self, kind, field, value, orderings=None):
+        super(NotInQuery, self).__init__(kind, field, value, orderings)
+
+    def validate(self, value):
+        return value not in self.value
+
+
+class MatchQuery(CustomQuery):
+    """Implementes ``match`` filter.
+    """
+    def __init__(self, kind, field, value, orderings=None):
+        super(MatchQuery, self).__init__(kind, field, value, orderings)
+        if not isinstance(value, basestring):
+            value = str(value)
+        self.regex = re.compile(value, re.I|re.M)
+
+    def validate(self, value):
+        return self.regex.match(value) is not None
+
+
+class LikeQuery(MatchQuery):
+    """Implementes ``like`` filter.
+    """
+    def __init__(self, kind, field, value, orderings=None):
+        if not isinstance(value, basestring):
+            value = str(value)
+        if value.startswith('%') and not value.endswith('%'):
+            value = '.*(%s)$' % value[1:]
+        elif value.endswith('%') and not value.startswith('%'):
+            value = '^(%s).*' % value[:-1]
+        elif value.startswith('%') and value.endswith('%'):
+            value = '.*(%s).*' % value[1:-1]
+        else:
+            value = '^(%s)$' % value
+        super(LikeQuery, self).__init__(kind, field, value, orderings)
 
 
 class MultiQuery(datastore.MultiQuery):
@@ -281,7 +363,7 @@ def check_integrity(model_instance):
             if not field.m2m.all().count():
                 continue
             if field.cascade:
-                q = field.m2m.all().filter('%s =' % field.source, model_instance.key)
+                q = field.m2m.all().filter('%s ==' % field.source, model_instance.key)
                 q.delete()
             else:
                 raise IntegrityError(
