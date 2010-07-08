@@ -7,7 +7,7 @@ PROJECT_NAME = "example"
 PROJECT_VERSION = "1.0"
 
 # Database backend engine
-# Possible value can be either sqlite3, postgresql, gae
+# Possible value can be either sqlite3, postgresql, mysql, gae
 DATABASE_ENGINE = "sqlite3"
 
 # Database name
@@ -45,6 +45,14 @@ MIDDLEWARE_CLASSES = (
 
 # Session storage engine (memory, memcached or database)
 SESSION_ENGINE = "memory"
+
+# Session related options, for example memcached servers.
+#
+# For memcached engine, provide list of memcached servers.
+# If DATABASE_ENGINE is set to 'gae' this option will be ignored.
+SESSION_OPTIONS = {
+    'memcached_servers': [],
+}
 
 # Session cookie options
 SESSION_COOKIE = {
