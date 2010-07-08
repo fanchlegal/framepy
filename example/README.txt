@@ -18,8 +18,7 @@ Here are the steps to get started play with it.
     $ ./admin.py runserver
 
 The include application packages in this example project are direct conversion
-from werkzeug examples and Flask examples.
+from werkzeug examples.
 
     wiki = werkzeug's simplewiki example
-    blog = Flask's Flaskr example
 
