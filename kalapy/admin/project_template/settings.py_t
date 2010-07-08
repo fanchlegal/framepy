@@ -52,6 +52,14 @@ MIDDLEWARE_CLASSES = (
 # Session storage engine (memory, memcached or database)
 SESSION_ENGINE = "memory"
 
+# Session related options, for example memcached servers.
+#
+# For memcached engine, provide list of memcached servers.
+# If DATABASE_ENGINE is set to 'gae' this option will be ignored.
+SESSION_OPTIONS = {
+    'memcached_servers': [],
+}
+
 # Session cookie options
 SESSION_COOKIE = {
     'name': 'session_id',

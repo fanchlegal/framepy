@@ -22,6 +22,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 SESSION_ENGINE = "memory"
+SESSION_OPTIONS = {}
 SESSION_COOKIE = {
     'name': 'session_id',
     'age': 60 * 60 * 24 * 7 * 2,
