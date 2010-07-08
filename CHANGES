@@ -3,14 +3,50 @@ KalaPy Changelog
 
 Here you can see the full list of changes between each KalaPy release.
 
+
+Version 0.3
+-----------
+
+Released on (to be announced).
+
+- Implemented memcached session storage engine.
+- Added validator argument to Field constructor.
+- Remove unique(), use __unique__ attribute instead.
+- Removed validate() decorator, use method name with 'validate_' prefix.
+- Removed meta() decorator, don't allow changing meta information.
+- Implemented MySQL support.
+- Implemented db.run_in_transaction (useful with GAE).
+- Improved ManyToMany field (accepts cascade argument)
+- Added `gae` admin command.
+- Projects are no longer a python packages (fixes GAE issue).
+- The example application is now GAE compatible.
+- Implemented Google App Engine support
+- Refactored db.Query interface
+    - Now follows GAE style filter syntax
+    - Added db.Q class to support ORed query
+    - Added db.QSet to implement engine specific query
+- Referance data_type is now engine specific.
+- Fixed i18n (loading translation catalogs)
+- Fixed Model.set_dirty issue
+- Fixed test api (early initialization of Application instance)
+- Removed support for auto-jsonify of dict results
+- Added more unit tests
+- Reimplemented test loader utils
+- Test name format now follows 'package:test_name' format
+- Added client attribute to TestCase
+
 Version 0.2.1
 -------------
+
+Released on 16th May, 2010.
 
 - Fixed distribution packaging issues
 
 
 Version 0.2
 -----------
+
+Released on 15th May, 2010.
 
 - Project has been renamed to KalaPy
 - Added a sphinx theme, peacock, for documentation
@@ -24,5 +60,7 @@ Version 0.2
 
 Version 0.1
 -----------
+
+Released on 3rd May, 2010.
 
 First public preview release.
