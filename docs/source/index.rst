@@ -21,6 +21,7 @@ User's Guide
     quickstart
     tutorial
     i18n
+    gae
     settings
     license
 
