@@ -38,7 +38,7 @@ class Store(SessionStore):
     def delete(self, session):
         self.lock.acquire()
         try:
-            del self.store[session.id]
+            del self.store[session.sid]
         finally:
             self.lock.release()
 
