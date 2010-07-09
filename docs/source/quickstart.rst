@@ -12,7 +12,7 @@ Create project
 
 .. sourcecode:: bash
 
-    $ kalapy-admin.py startproject hello
+    $ kalapy-quickstart.py hello
 
 A new project directory ``hello`` will be created with ``admin.py`` and
 ``settings.py`` files.

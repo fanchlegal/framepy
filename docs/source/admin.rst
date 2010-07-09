@@ -3,16 +3,16 @@
 Admin Scripts
 =============
 
-The ``kalapy-admin.py`` is a command line script to create *KalaPy* projects.
-Which, in turn, generates a project skeleton that includes an ``admin.py`` script
-that can be used for administrative tasks for the project.
+The ``kalapy-quickstart.py`` is a command line script to create *KalaPy* projects.
+The generated project skeleton includes an ``admin.py`` script that can be used
+for administrative tasks for the project.
 
 Available Scripts
 -----------------
 
-.. describe:: kalapy-admin.py <command> [options] [args]
+.. describe:: kalapy-quickstart.py <project>
 
-The ``kalapy-admin.py`` script can be used to create new projects.
+The ``kalapy-quickstart.py`` script can be used to create new projects.
 
 .. describe:: admin.py <command> [options] [args]
 

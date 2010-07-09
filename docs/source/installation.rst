@@ -61,19 +61,15 @@ or not:
 
 .. sourcecode:: bash
 
-    $ kalapy-admin.py
-    Usage: kalapy-admin.py <command> [options] [args]
+    $ kalapy-quickstart.py
+    Usage: kalapy-quickstart.py <project>
+
+    Create a new KalaPy project.
 
     options:
 
-      -h --help    show help text and exit
-         --version show version information and exit
-
-    available commands:
-
-      startproject
-
-    use "kalapy-admin.py help <command>" for more details on a command
+      -v --verbose enable verbose output
+      -h --help    display help and exit
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv/
 

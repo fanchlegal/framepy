@@ -59,10 +59,10 @@ def check_name(name):
 
 
 class StartProject(Command):
-    """start a new project
+    """Create a new KalaPy project.
     """
     name = "startproject"
-    usage = "%name <name>"
+    usage = "<project>"
 
     scope = None
 

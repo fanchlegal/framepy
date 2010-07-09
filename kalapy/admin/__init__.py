@@ -229,7 +229,7 @@ class Command(object):
         usage = self.usage.replace('%name', self.name, 1)
         doc = self.doc.replace('%prog', prog)
 
-        text = '%s %s\n%s%s' % (
+        text = 'Usage: %s %s\n%s%s' % (
             prog, usage, doc, self.parser.options_text())
         return text
 

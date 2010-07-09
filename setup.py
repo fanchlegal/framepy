@@ -59,7 +59,7 @@ setup(
     ],
     packages=packages,
     include_package_data=True,
-    scripts=['bin/kalapy-admin.py'],
+    scripts=['bin/kalapy-quickstart.py'],
     **setup_args
 )
 
