@@ -1,3 +1,6 @@
+*.egg-info
+build
+dist
 .ropeproject
 *.py[co]
 *.sw[nop]

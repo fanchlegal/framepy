@@ -7,20 +7,20 @@ from setuptools import setup, find_packages
 
 try:
     from babel.messages import frontend as babel
-    cmdclasses = {
-        'compile_catalog': babel.compile_catalog,
-        'extract_messages': babel.extract_messages,
-        'init_catalog': babel.init_catalog,
-        'update_catalog': babel.update_catalog
-    }
-    message_extractors = {
-        'kalapy': [
-            ('**.py', 'python', None),
-        ],
-    }
+    setup_args = dict(
+        cmdclasses={
+            'compile_catalog': babel.compile_catalog,
+            'extract_messages': babel.extract_messages,
+            'init_catalog': babel.init_catalog,
+            'update_catalog': babel.update_catalog
+        },
+        message_extractors={
+            'kalapy': [
+                ('**.py', 'python', None),
+            ],
+        })
 except ImportError:
-    cmdclasses = {}
-    message_extractors = {}
+    setup_args = {}
 
 # import release meta data (version, author etc.)
 execfile(os.path.join("kalapy", "release.py"))
@@ -60,7 +60,6 @@ setup(
     packages=packages,
     include_package_data=True,
     scripts=['bin/kalapy-admin.py'],
-    cmdclass=cmdclasses,
-    message_extractors=message_extractors,
+    **setup_args
 )
 
