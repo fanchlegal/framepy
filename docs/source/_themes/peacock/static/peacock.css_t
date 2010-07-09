@@ -1,5 +1,5 @@
-@import url("nature.css");
-@import url("http://fonts.googleapis.com/css?family=Droid+Serif");
+@import url(nature.css);
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif:regular,italic,bold,bolditalic);
 
 {%- set page_width = theme_page_width %}
 {%- set sidebar_width = theme_sidebar_width %}
@@ -11,7 +11,7 @@ body {
 }
 
 body, h1, h2, h3, h4, h5, h6 {
-    font-family: "Georgia", "Droid Serif", "Times", serif !important;
+    font-family: "Droid Serif", "Georgia", "Times", serif !important;
 }
 
 {% if page_width %}
