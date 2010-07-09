@@ -4,11 +4,17 @@ kalapy.utils.signals
 
 This module implements simple signal/event dispatching api.
 
-Connecting a signal is as easy as using a `signals.connect` decorator
-with signal name on a handler function. The signal can be fired with
-`signals.send` method along with params if any.
+The signal dispather helps to implemented decoupled application packages
+which get notified when action occures elsewhere, in the framework or in
+the application packages. Signals allow certain senders to notify a set of
+receivers that some action has taken place.
+
+A signal listener can be registered using :func:`connect` decorator. The signal
+can be fired with :func:`send` method along with params if any.
 
 For example::
+
+    from kalapy.utils import signals
 
     @signals.connect('onfinish')
     def on_finish_1(state):
@@ -87,7 +93,7 @@ class Signal(object):
         """Fire the signal.
 
         All handlers registered with this signal instance will be called passing
-        the given *args nad **kw
+        the given positional and keyword arguments.
 
         :param args: to be passed to signal handlers
         :param kw: to be passed to signal handlers
@@ -140,7 +146,8 @@ def disconnect(signal, handler=None):
 def send(signal, *args, **kw):
     """Fire the specified signal.
 
-    The signal handlers will be called with the given *args and **kw.
+    The signal handlers will be called with the given positional and keyword
+    arguments.
 
     >>> signals.send('onfinish', state=1)
 

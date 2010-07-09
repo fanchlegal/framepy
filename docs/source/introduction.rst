@@ -5,7 +5,7 @@ Introduction
 
 *KalaPy* is a web application framework for `Python`_ providing it's own
 :ref:`Database Abstraction Layer <dal>`, web components based on `Werkzeug`_,
-templating using powerful `Jinja2`_ template engine and full internationalization
+templating using powerful `Jinja2`_ template engine and full :ref:`internationalization <i18n>`
 support via `Babel`_ and `pytz`_ and more...
 
 The development is still under alpha stage and API might change during this
@@ -31,8 +31,8 @@ Intentions & Goals
 The primary intention of this project is to implement a web framework to make
 it easy to develop highly modular web applications.
 
-Another major goal is to implement a database abstraction layer which can be
-used with any kind of database systems, be it an RDBMS or NoSQL database.
+Another major goal is to implement a :ref:`database abstraction layer <dal>` which
+can be used with any kind of database systems, be it an RDBMS or NoSQL database.
 
 Following goals have been set:
 

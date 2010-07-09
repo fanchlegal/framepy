@@ -1,0 +1,16 @@
+Internationalization and Localization
+=====================================
+
+This module defines API for `i18n` and `L10n` support.
+
+Utilities
+---------
+
+.. automodule:: kalapy.i18n.utils
+    :members:
+
+Formating
+---------
+
+.. automodule:: kalapy.i18n.format
+    :members:

@@ -2,12 +2,15 @@
 kalapy.utils.containers
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-This module implements few container datastructures like `OrderedDict`.
+This module implements few container datastructures like :class:`OrderedDict`.
 
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
 class OrderedDict(dict):
+    """A :class:`dict` class that keeps its keys in the order in which
+    they're inserted.
+    """
 
     def __init__(self, *args, **kw):
         dict.__init__(self, *args, **kw)

@@ -7,11 +7,6 @@ This guide will help you quickly getting started with *KalaPy*. This assumes
 you already have *KalaPy* installed, if not please check the :ref:`installation`
 section.
 
-.. note::
-
-    This is just an initial version of quick start guide and not as verbose
-    as it should be, but will be improved as it goes...
-
 Create project
 --------------
 
@@ -19,8 +14,8 @@ Create project
 
     $ kalapy-admin.py startproject hello
 
-A new project directory `hello` will be created with `admin.py` and `settings.py`
-files.
+A new project directory ``hello`` will be created with ``admin.py`` and
+``settings.py`` files.
 
 
 Create package
@@ -31,7 +26,7 @@ Create package
     $ cd hello
     $ ./admin.py startpackage foo
 
-A new application package `foo` will be created under the current project
+A new application package ``foo`` will be created under the current project
 directory with following contents::
 
     foo/__init__.py
@@ -41,15 +36,15 @@ directory with following contents::
     foo/static/
     foo/templates/
 
-The `models.py` is where you should define you models and `views.py` is where
+The ``models.py`` is where you should define you models and ``views.py`` is where
 you should define you view functions.
 
-You can use the `static` directory to serve static contents and the `templates`
+You can use the ``static`` directory to serve static contents and the ``templates``
 directory should hold all the templates for the views.
 
-The application package created here needs to be activated from the `settings`
-module of the project created earlier. Open the `settings.py` file and append
-`foo` to the list of `INSTALLED_PACKAGES`.
+The application package created here needs to be activated from the ``settings``
+module of the project created earlier. Open the ``settings.py`` file and append
+``foo`` to the list of ``INSTALLED_PACKAGES``.
 
 .. note::
 
@@ -64,7 +59,7 @@ module of the project created earlier. Open the `settings.py` file and append
 Define models
 -------------
 
-Models should be defined under `models.py` like this::
+Models should be defined under ``models.py`` like this::
 
     from kalapy import db
 
@@ -90,14 +85,14 @@ Database setup
 --------------
 
 As you defined your models, it's time to setup database to store the model data.
-You should configure the database engine from `settings` module via following
+You should configure the database engine from ``settings`` module via following
 settings::
 
     DATABASE_ENGINE = "sqlite3"
     DATABASE_NAME = "test_hello.sqlite"
 
-KalaPy supports `sqlite3`, `postgresql`, `mysql` and `gae` backend engines.
-For simplicity let you use `sqlite3` for this demo project.
+KalaPy supports ``sqlite3``, ``postgresql``, ``mysql`` and ``gae`` backend engines.
+For simplicity let you use ``sqlite3`` for this demo project.
 
 Now as you have configured you database setup, next step is to create database
 and required tables for the defined models.
@@ -120,8 +115,8 @@ If you want to see the table schema, issue this command:
 
     $ ./admin.py database info foo
 
-This will print CREATE TABLE statements of all the modules defined in the `foo`
-package like this:
+This will print ``CREATE TABLE`` statements of all the modules defined in the
+``foo`` package like this:
 
 .. sourcecode:: sql
 
@@ -139,13 +134,13 @@ package like this:
         FOREIGN KEY ("article") REFERENCES "foo_article" ("key")
     );
 
-The output varies depending on the database backend you have selected. Use `help`
+The output varies depending on the database backend you have selected. Use ``help``
 to see more information on other available commands.
 
 Playing with API
 ----------------
 
-The `admin.py` script provides two commands to play with the *KalaPy* api.
+The ``admin.py`` script provides two commands to play with the *KalaPy* api.
 
 Start an interactive python shell:
 
@@ -179,7 +174,7 @@ Let's check with shell::
 Define views
 ------------
 
-You should define your view functions inside the `views.py` module like::
+You should define your view functions inside the ``views.py`` module like::
 
     from kalapy import web
     from kalapy.web import request

@@ -1,3 +1,5 @@
+.. _i18n:
+
 Internationalization and Localization
 =====================================
 
@@ -78,8 +80,8 @@ Pluralization
 
 You can specify pluralized messages with function ``kalapy.i18n.ngettext``.
 
-This function does a plural-forms lookup of a given string depending on the `num`
-parameter and uses `plural` instead of `string` if `num` represents plural in
+This function does a plural-forms lookup of a given string depending on the ``num``
+parameter and uses ``plural`` instead of ``string`` if ``num`` represents plural in
 the current locale.
 
 For example::
@@ -126,12 +128,12 @@ language.
 KalaPy uses `Babel`_ command line interface to generate message files. The files
 when translated should be compiled in `.mo` format in order to use the new translations.
 
-This can be done with the `admin.py` script generated in your project directory.
+This can be done with the ``admin.py`` script generated in your project directory.
 Type following command on your terminal to see help on catalog related commands.
 
 ::
 
-    $ ./admin help babel
+    $ ./admin.py help babel
     admin.py babel <action> [options] [package [package [...]]]
 
     Perform i18n message catalog actions.
@@ -150,14 +152,14 @@ Type following command on your terminal to see help on catalog related commands.
       init     create new message catalogs from generated POT file
       update   update existing message catalogs from generated POT file
 
-This actions provided by `admin.py babel` command is identical to the `pybabel`
+This actions provided by ``admin.py babel`` command is identical to the ``pybabel``
 script that comes with `Babel`_.
 
 Extracting messages
 ~~~~~~~~~~~~~~~~~~~
 
 The first step is to extract translatable strings into a message catalog template
-file. This can be done with `admin.py babel extract` command::
+file. This can be done with ``admin.py babel extract`` command::
 
     $ ./admin.py babel extract
 
@@ -167,7 +169,7 @@ this::
 
     $ ./admin.py babel extract foo bar
 
-Where, `foo` and `bar` are packages of current project. A `locale/messages.pot`
+Where, ``foo`` and ``bar`` are packages of current project. A ``locale/messages.pot``
 file will be created under every specified packages.
 
 Creating message catalogs
@@ -179,10 +181,10 @@ update existing catalogs. Creating new catalogs is as easy as::
 
     $ ./admin.py babel init -l fr_FR foo
 
-Where, `foo` is a package of current project, if omitted, catalogs will be created
+Where, ``foo`` is a package of current project, if omitted, catalogs will be created
 for all the available packages.
 
-A catalog file `locale/fr_FR/LC_MESSAGES/messages.po` will be created under all
+A catalog file ``locale/fr_FR/LC_MESSAGES/messages.po`` will be created under all
 the specified packages.
 
 .. note::
@@ -218,15 +220,15 @@ the available catalogs.
 Catalogs for JavaScript
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Message catalogs for JavaScript falls under `javascript` domain. Perform all the
-above actions with option `-d javascript` to create message catalogs for javascript.
+Message catalogs for JavaScript falls under ``javascript`` domain. Perform all the
+above actions with option ``-d javascript`` to create message catalogs for javascript.
 
 Formatting
 ++++++++++
 
 KalaPy provides several functions to format numbers, decimals and date values to
 locale specific formats. It also provides few functions to parse localized numbers,
-decimals and date values.
+decimal and date values.
 
-See API documentation for more information.
+See :ref:`API documentation <api/i18n>` for more information.
 
