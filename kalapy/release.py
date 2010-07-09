@@ -1,6 +1,6 @@
 """This module defines package release information.
 """
-version         = '0.3b1'
+version         = '0.3'
 license         = 'BSD'
 author          = 'Amit Mendapara'
 author_email    = 'mendapara.amit@gmail.com'

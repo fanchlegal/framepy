@@ -7,8 +7,9 @@ Here you can see the full list of changes between each KalaPy release.
 Version 0.3
 -----------
 
-Released on (to be announced).
+Released on 9th July, 2010.
 
+- Renamed kalapy-admin.py to kalapy-quickstart.py
 - Implemented memcached session storage engine.
 - Added validator argument to Field constructor.
 - Remove unique(), use __unique__ attribute instead.
