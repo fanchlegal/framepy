@@ -532,3 +532,24 @@ class FieldTest(TestCase):
         obj = q.fetchone()
         assert obj and obj.decimal_value == Decimal('2.345')
 
+    def test_Text(self):
+        FieldType.all().delete()
+        value = "This is a long text " * 500
+        obj = FieldType()
+        obj.text_value = value
+
+        # check whether the long text is saved
+        try:
+            obj.save()
+        except Exception, e:
+            self.fail(e)
+
+        # check the return value
+        val = FieldType.select('text_value').fetchone()
+        assert isinstance(val, basestring)
+
+
+
+
+
+
