@@ -244,11 +244,11 @@ def _validate_string(name, value, size=None):
     if not isinstance(value, basestring):
         raise ValidationError(
             _('Field %(name)r must be a str or unicode instance, not %(type)r',
-                    name=name, type=type(value).__name__))
+                name=name, type=type(value).__name__))
     if size is not None and len(value) > size:
         raise ValidationError(
             _('Field %(name)s is %(length)d bytes long; it must be %(size)d or less.',
-                len(value), size))
+                name=name, length=len(value), size=size))
     return value
 
 
