@@ -21,13 +21,13 @@ def setup_stubs():
         print "The environment variable GAE_HOME doesn't point to AppEngine SDK."
         sys.exit(0)
 
-    sys.path.insert(0, GAE_HOME)
+    from kalapy.conf import settings
+    sys.path = [os.path.join(settings.PROJECT_DIR, 'lib'), GAE_HOME] + sys.path
+
     from dev_appserver import fix_sys_path
     fix_sys_path()
     from google.appengine.tools.dev_appserver import SetupStubs, LoadAppConfig
     from google.appengine.tools.dev_appserver_main import ParseArguments
-
-    from kalapy.conf import settings
 
     args, option_dict = ParseArguments(['', settings.PROJECT_DIR])
     config, matcher = LoadAppConfig(settings.PROJECT_DIR, {})
