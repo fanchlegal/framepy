@@ -3,6 +3,15 @@ KalaPy Changelog
 
 Here you can see the full list of changes between each KalaPy release.
 
+Version 0.3.1
+-------------
+
+Bugfix release, released on 10th July, 2010.
+
+- Fixed GAE issue, convert db.Text values to datastore_types.Text to overcome
+  with size contraint.
+- The Text field is no longer a subclass of String field (size contraint issue).
+- Allow database engines to use custom type convertors.
 
 Version 0.3
 -----------
