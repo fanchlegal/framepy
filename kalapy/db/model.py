@@ -429,13 +429,17 @@ class Model(object):
         """
         self._dirty = dict.fromkeys(self._values, True) if dirty else {}
 
-    def _to_database_values(self, dirty=False):
+    def _to_database_values(self, dirty=False, conv=None):
         """Return values to be stored in database table for this model instance.
 
-        If dirty is True only return field values marked as dirty else returns
+        If ``dirty`` is True only return field values marked as dirty else returns
         all values.
 
+        The ``conv`` is a dict of data_type and custom convertors that can be
+        used to convert the field values.
+
         :param dirty: if True only return values of fields marked dirty
+        :param conv: convertors for specific types
 
         :returns: a dict, key-value maping of this model's fields.
         """
@@ -443,8 +447,13 @@ class Model(object):
         if dirty:
             fields = [f for f in fields if f.name in self._dirty]
 
-        result = dict([(f.name, f.python_to_database(self._values[f.name])) \
-                       for f in fields if f.name != 'key'])
+        result = {}
+        for field in fields:
+            if field.name == 'key': continue
+            value = field.python_to_database(self._values[field.name])
+            if conv and field.data_type in conv:
+                value = conv[field.data_type](value)
+            result[field.name] = value
         return result
 
     @classmethod
