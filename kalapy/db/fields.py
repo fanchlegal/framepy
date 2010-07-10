@@ -240,6 +240,18 @@ class AutoKey(Field):
             _('%(name)r is a read-only primary key field.', name=self.name))
 
 
+def _validate_string(name, value, size=None):
+    if not isinstance(value, basestring):
+        raise ValidationError(
+            _('Field %(name)r must be a str or unicode instance, not %(type)r',
+                    name=name, type=type(value).__name__))
+    if size is not None and len(value) > size:
+        raise ValidationError(
+            _('Field %(name)s is %(length)d bytes long; it must be %(size)d or less.',
+                len(value), size))
+    return value
+
+
 class String(Field):
     """String field stores textual data, especially short string values like
     name, title etc.
@@ -264,15 +276,12 @@ class String(Field):
         return self._size
 
     def validate(self, value):
-        if not isinstance(value, basestring):
-            raise ValidationError(
-                _('Field %(name)r must be a str or unicode instance, not %(type)r',
-                    name=self.name, type=type(value).__name__))
+        _validate_string(self.name, value, self.size)
         return value
 
-class Text(String):
-    """Text field is a variant of :class:`String` field that can hold relatively
-    large textual data.
+
+class Text(Field):
+    """Text field can hold longer textual data.
 
     For example::
 
@@ -283,6 +292,10 @@ class Text(String):
     """
 
     _data_type = "text"
+
+    def validate(self, value):
+        _validate_string(self.name, value)
+        return value
 
 
 class Integer(Field):
@@ -534,6 +547,7 @@ def _parse_datetime(value, type=datetime.datetime):
     except:
         return value
 
+
 class Date(DateTime):
     """Date field stores a date without time.
     """
@@ -561,6 +575,7 @@ class Date(DateTime):
     @staticmethod
     def now():
         return datetime.datetime.now().date()
+
 
 class Time(DateTime):
     """Time field stores a time without date.
