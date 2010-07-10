@@ -17,13 +17,18 @@ except ImportError:
     setup_stubs()
     from google.appengine.api import datastore
 
-from google.appengine.api import datastore_errors
+from google.appengine.api import datastore_errors, datastore_types
 
 from kalapy.db.engines.interface import IDatabase
 from kalapy.db.model import Model
 from kalapy.conf import settings
 
 __all__ = ('DatabaseError', 'IntegrityError', 'Database')
+
+
+CONV = {
+    'text': datastore_types.Text,
+}
 
 
 class DatabaseError(Exception):
@@ -85,7 +90,7 @@ class Database(IDatabase):
         for obj in instances:
             if not isinstance(instance, Model):
                 raise TypeError('update_records expects Model instances')
-            items = obj._to_database_values(True)
+            items = obj._to_database_values(True, conv=CONV)
 
             if not obj.is_saved:
                 obj._payload = datastore.Entity(obj._meta.table)
