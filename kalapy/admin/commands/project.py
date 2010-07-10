@@ -12,7 +12,6 @@ import os, sys, re, shutil, string
 
 from kalapy.admin import Command, ActionCommand, CommandError
 
-
 def copy_template(template, target, context):
 
     source = os.path.dirname(os.path.dirname(__file__))
@@ -27,7 +26,7 @@ def copy_template(template, target, context):
         srcname = os.path.join(source, name)
         dstname = os.path.join(target, name)
 
-        if os.path.isdir(srcname):
+        if os.path.isdir(srcname) or srcname[-4:] in ('.pyc', '.pyo'):
             continue
 
         if srcname.endswith('_t'):
@@ -45,6 +44,14 @@ def copy_template(template, target, context):
             fo = open(dstname, 'w')
             fo.write(content)
             fo.close()
+
+        #XXX: make python scripts executable (pip install issue?)
+        if dstname.endswith('.py') and open(dstname).read(2) == '#!':
+            try:
+                os.chmod(dstname, mode)
+            except:
+                pass
+
 
 def check_name(name):
     pat = re.compile('^[_a-zA-Z]\w*$')
@@ -148,7 +155,7 @@ class GAEProject(ActionCommand):
         from kalapy.conf import settings
         name = settings.PROJECT_NAME
         context = {'appname': name.lower(), 'name': name}
-        if options.verbose:
+        if not os.path.exists('app.yaml') and options.verbose:
             print "Creating app.yaml..."
         copy_template('gae_template', os.curdir, context)
 
