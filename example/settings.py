@@ -6,6 +6,9 @@ PROJECT_NAME = "example"
 # Version of the project
 PROJECT_VERSION = "1.0"
 
+# Enable/Disable debug mode
+DEBUG = True
+
 # Database backend engine
 # Possible value can be either sqlite3, postgresql, mysql, gae
 DATABASE_ENGINE = "sqlite3"
