@@ -2,15 +2,15 @@
 kalapy.utils.signals
 ~~~~~~~~~~~~~~~~~~~~
 
-This module implements simple signal/event dispatching api.
+This module implements simple signal/event dispatching.
 
-The signal dispather helps to implemented decoupled application packages
-which get notified when action occures elsewhere, in the framework or in
+The signal dispatcher helps to implemented decoupled application packages
+which get notified when action occurs elsewhere, in the framework or in
 the application packages. Signals allow certain senders to notify a set of
 receivers that some action has taken place.
 
 A signal listener can be registered using :func:`connect` decorator. The signal
-can be fired with :func:`send` method along with params if any.
+can be fired with :func:`send` method.
 
 For example::
 
@@ -42,6 +42,19 @@ import types, weakref
 __all__ = ('Signal', 'connect', 'disconnect', 'send')
 
 
+class SignalType(type):
+    """Meta class to ensure singleton instances of :class:`Signal` for the
+    given signal name.
+    """
+    instances = {}
+
+    def __call__(cls, name):
+        if name in cls.instances:
+            return cls.instances[name]
+        return cls.instances.setdefault(name,
+            super(SignalType, cls).__call__(name))
+
+
 class Signal(object):
     """Signal class caches all the registered handlers in `WeakValueDictionary`
     so that handlers can be automatically garbage collected if the reference
@@ -49,16 +62,14 @@ class Signal(object):
 
     :param name: name for the signal
     """
+
+    __metaclass__ = SignalType
+
     def __init__(self, name):
         """Create a new Signal instance with the given name.
         """
         self.name = name
         self.registry = weakref.WeakValueDictionary()
-
-    def make_id(self, handler):
-        if hasattr(handler, 'im_func'):
-            return id(handler.im_self), id(handler.im_func)
-        return id(handler)
 
     def connect(self, handler):
         """Connect the given handler to the signal. The handler must be a
@@ -72,12 +83,10 @@ class Signal(object):
         """
         if not isinstance(handler, types.FunctionType):
             raise TypeError(_('Signal handler must be a function'))
-        id = self.make_id(handler)
-        if id not in self.registry:
-            self.registry[id] = handler
+        self.registry.setdefault(id(handler), handler)
         return handler
 
-    def disconnect(self, handler):
+    def disconnect(self, handler=None):
         """Manually disconnect the given handler if it is registered with
         this signal.
 
@@ -86,8 +95,10 @@ class Signal(object):
 
         :param handler: the handler function
         """
-        id = self.make_id(handler)
-        self.registry.pop(id, None)
+        if handler is None:
+            self.registry.clear()
+        else:
+            self.registry.pop(id(handler), None)
 
     def send(self, *args, **kw):
         """Fire the signal.
@@ -105,8 +116,9 @@ class Signal(object):
             result.append(handler(*args, **kw))
         return result
 
-#: global cache of all the signals
-REGISTRY = {}
+    def __call__(self, *args, **kw):
+        return self.send(*args, **kw)
+
 
 def connect(signal):
     """A decorator to connect a function to the specified signal.
@@ -120,9 +132,9 @@ def connect(signal):
     :param signal: name of the signal
     """
     def wrapper(func):
-        REGISTRY.setdefault(signal, Signal(signal)).connect(func)
-        return func
+        return Signal(signal).connect(func)
     return wrapper
+
 
 def disconnect(signal, handler=None):
     """If handler is given then disconnect the handler from the specified
@@ -134,13 +146,8 @@ def disconnect(signal, handler=None):
     :param signal: name of the signal
     :param handler: a signal handler
     """
-    if signal not in REGISTRY:
-        return
-    if handler:
-        REGISTRY[signal].disconnect(handler)
-        return
-    REGISTRY[signal].registry.clear()
-    del REGISTRY[signal]
+    if signal in Signal.instances:
+        Signal(signal).disconnect(handler)
 
 
 def send(signal, *args, **kw):
@@ -156,7 +163,20 @@ def send(signal, *args, **kw):
 
     :returns: list of the results of all the signal handlers
     """
-    result = []
-    if signal in REGISTRY:
-        result.extend(REGISTRY[signal].send(*args, **kw))
-    return result
+    if signal in Signal.instances:
+        return Signal(signal).send(*args, **kw)
+    return []
+
+
+if __name__ == "__main__":
+
+    @connect('onfoo')
+    def foo1(data):
+        print "Foo1 %s!" % data
+
+    @connect('onfoo')
+    def foo2(data):
+        print "Foo2 %s!" % data
+
+    send('onfoo', data=2)
+
