@@ -36,9 +36,13 @@ class ScriptCommand(Command):
         execfile(script, {'__name__': '__main__'})
 
 class ShellCommand(Command):
-    """Runs a Python interactive interpreter
+    """Runs a Python interactive interpreter. Tries to use IPython if available.
     """
     name = 'shell'
+
+    options = (
+        ('p', 'plain', False, 'use plain python interpreter, not ipython.'),
+    )
 
     def execute(self, options, args):
 
@@ -46,15 +50,22 @@ class ShellCommand(Command):
         from kalapy.conf.loader import loader
         loader.load()
 
-        imported_objects = {}
-        try: # Try activating rlcompleter, because it's handy.
-            import readline
-            import rlcompleter
-            readline.set_completer(rlcompleter.Completer(imported_objects).complete)
-            readline.parse_and_bind("tab:complete")
+        try:
+            if options.plain:
+                raise ImportError
+            import IPython
+            shell = IPython.Shell.IPShell(argv=[])
+            shell.mainloop()
         except ImportError:
-            pass
+            imported_objects = {}
+            try: # Try activating rlcompleter, because it's handy.
+                import readline
+                import rlcompleter
+                readline.set_completer(rlcompleter.Completer(imported_objects).complete)
+                readline.parse_and_bind("tab:complete")
+            except ImportError:
+                pass
 
-        import code
-        code.interact(local=imported_objects)
+            import code
+            code.interact(local=imported_objects)
 
