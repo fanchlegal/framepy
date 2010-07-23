@@ -17,9 +17,8 @@ VERSION = "1.0"
 EXTENDS = None
 
 #: Other packages this package depends on.
-DEPENDS = []
+DEPENDS = None
 
 #: Submount to be used to mount this package.
 #: For example, '/wiki', '/blog' etc.
 SUBMOUNT = None
-
