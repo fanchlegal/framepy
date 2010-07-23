@@ -75,16 +75,3 @@ SESSION_COOKIE = {
 INSTALLED_PACKAGES = (
     'kalapy.contrib.sessions',
 )
-
-# Package options (submount etc).
-#
-# For example::
-#
-# PACKAGE_OPTIONS = {
-#     'wiki': {'submount': '/wiki'},
-#     'blog': {'submount': '/blog'},
-# }
-#
-PACKAGE_OPTIONS = {
-}
-
