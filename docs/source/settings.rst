@@ -2,13 +2,15 @@ Settings
 ========
 
 A settings file contains all the configuration of your KalaPy application. A
-settings file is just a normal Python module with module-level variables. The
-settings module is located in the top-level project directory.
+settings file is just a normal Python module with module-level variables.
 
-Available Settings
-------------------
+There are two kind of settings file, `project settings` located in the top-level
+project directory and `package settings` located in the package directory.
 
-Here is the list of available settings.
+Project Settings
+----------------
+
+Here is the list of available project settings.
 
 
 DATABASE_ENGINE
@@ -162,21 +164,71 @@ Default::
 
 List of installed packages.
 
-PACKAGE_OPTIONS
-+++++++++++++++
+
+Package Settings
+----------------
+
+Here is the list of available package settings.
+
+NAME
+++++
 
 Default::
 
-    PACKAGE_OPTIONS = {
-        'wiki': {'submount': '/wiki'},
-        'blog': {'submount': '/blog'},
-    }
+    NAME = "package_name"
 
-Package options (submount etc).
+The name of the package.
 
+DESCRIPTION
++++++++++++
+
+Default::
+
+    DESCRIPTION = """
+    """
+
+Package description.
+
+VERSION
++++++++
+
+Default::
+    VERSION = "1.0"
+
+Package version string.
+
+EXTENDS
++++++++
+
+Default::
+
+    EXTENDS = None
+
+The name of the package that is extended by this package. In that case this
+package is considered an addon package and resources provided by this package
+will be served as the resources of extending package.
+
+DEPENDS
++++++++
+
+Default::
+
+    DEPENDS = None
+
+List of other packages this package depends on.
+
+SUBMOUNT
+++++++++
+
+Default::
+
+    SUBMOUNT = None
+
+Submount to be used to mount this package. For example, ``'/wiki'``, ``'/blog'``
+etc. Ignored for addon packages.
 
 .. warning::
 
-    As settings file may contain sensitive information like database password, you
-    should limit access to it. For example, change file permission etc.
-
+    As project settings file may contain sensitive information like database
+    password, you should limit access to it. For example, change file permission
+    etc.
