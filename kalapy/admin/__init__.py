@@ -408,7 +408,8 @@ def setup_environment(settings_mod):
     It will update the configuration settings and load the project.
     """
     from kalapy.conf import settings
-    settings.update(settings_mod)
+    project_dir = os.path.dirname(os.path.abspath(settings_mod.__file__))
+    settings.update(settings_mod, project_dir=project_dir)
 
 
 def execute_command(args=None, settings_mod=None):

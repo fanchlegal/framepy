@@ -13,7 +13,7 @@ import os, sys
 from jinja2 import FileSystemLoader
 from werkzeug.routing import Rule, Map
 
-from kalapy.conf import settings
+from kalapy.conf import Settings, settings, package_settings
 
 
 __all__ = ('Package',)
@@ -60,6 +60,9 @@ class Package(object):
     #: view functions, shared among all the packages
     views = {}
 
+    #: Package settings
+    settings = None
+
     def __init__(self, name, path=None):
 
         if path is None:
@@ -68,8 +71,14 @@ class Package(object):
         self.name = name
         self.path = path
 
-        opts = settings.PACKAGE_OPTIONS.get(name, {})
-        self.submount = opts.get('submount')
+        options = dict(NAME=self.name)
+        try:
+            execfile(os.path.join(self.path, 'settings.py'), {}, options)
+        except Exception, e:
+            pass
+        self.settings = Settings(package_settings, **options)
+
+        self.submount = self.settings.SUBMOUNT
 
         # static dir info
         self.static = os.path.join(self.path, 'static')
@@ -143,4 +152,3 @@ class Package(object):
             self.add_rule(rule, None, func, **options)
             return func
         return wrapper
-

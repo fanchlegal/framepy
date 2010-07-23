@@ -71,17 +71,3 @@ INSTALLED_PACKAGES = (
     'main',
     'wiki',
 )
-
-# Package options (submount etc).
-#
-# For example::
-#
-# PACKAGE_OPTIONS = {
-#     'wiki': {'submount': '/wiki'},
-#     'blog': {'submount': '/blog'},
-# }
-#
-PACKAGE_OPTIONS = {
-    'wiki': {'submount': '/wiki'},
-}
-

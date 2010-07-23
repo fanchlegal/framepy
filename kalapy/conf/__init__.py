@@ -9,7 +9,7 @@ Configurations and application package loading.
 """
 import os, types
 
-from kalapy.conf import default
+from kalapy.conf import global_settings
 
 
 class Settings(object):
@@ -18,24 +18,30 @@ class Settings(object):
 
     __freezed = False
 
-    def __init__(self):
-        self.__update(default)
+    def __init__(self, settings_module, **options):
+        self.__update(settings_module, **options)
         self.__freezed = False
 
-    def __update(self, settings_module):
+    def __update(self, settings_module, **options):
         """Update the settings with provided settings_module.
         """
-        if not isinstance(settings_module, types.ModuleType):
-            raise ValueError("setting_module should be a module type.")
-        for setting in dir(settings_module):
-            if setting == setting.upper():
-                setattr(self, setting, getattr(settings_module, setting))
+        if settings_module:
+            if not isinstance(settings_module, types.ModuleType):
+                raise ValueError("setting_module should be a module type.")
+            for setting in dir(settings_module):
+                if setting == setting.upper():
+                    setattr(self, setting, getattr(settings_module, setting))
+        for option, value in options.items():
+            if not option.startswith('_'):
+                setattr(self, option.upper(), value)
 
-    def update(self, settings_module):
-        """Update the settings with provided settings_module.
+    def update(self, settings_module, **options):
+        """Update the settings with provided settings_module and options.
         """
-        self.__update(settings_module)
-        self.PROJECT_DIR = os.path.dirname(settings_module.__file__)
+        if not options:
+            assert settings_module is not None, \
+                "provide settings via settings module or options keywords"
+        self.__update(settings_module, **options)
         self.__freezed = True
 
     def __setattr__(self, name, value):
@@ -44,4 +50,4 @@ class Settings(object):
         super(Settings, self).__setattr__(name, value)
 
 
-settings = Settings()
+settings = Settings(global_settings)
