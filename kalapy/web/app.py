@@ -14,11 +14,15 @@ from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
 from werkzeug.routing import Rule, Map
 from werkzeug.exceptions import HTTPException
 
+from jinja2.loaders import PrefixLoader, FileSystemLoader
+
 from kalapy.conf import settings
 from kalapy.utils import signals
 
+from .local import _local, _local_manager, request
+from .helpers import url_for
 from .wrappers import Request, Response
-from .local import _local, _local_manager
+from .templating import JinjaEnvironment
 
 
 __all__ = ('Middleware', 'Application', 'simple_server',)
@@ -111,7 +115,6 @@ class Application(object):
     def __init__(self):
 
         self.debug = settings.DEBUG
-        _local.current_app = self
 
         # load all the INSTALLED_PACKAGES
         from kalapy.web.package import loader
@@ -138,7 +141,39 @@ class Application(object):
 
         self.dispatch = StaticMiddleware(self.dispatch, paths)
 
+        # create jinja env
+        self.jinja_env = self._create_jinja_env(loader.get_template_paths())
+
+
+    def _create_jinja_env(self, paths):
+        """Creates Jinja template loader for the provided template paths.
+        Returns a JinjaEnvironment instance.
+        """
+        paths[''] = (os.path.join(settings.PROJECT_DIR, 'templates'),)
+        paths = dict([(k, FileSystemLoader(v)) for k, v in paths.items()])
+
+        jinja_loader = PrefixLoader(paths, delimiter=':')
+
+        jinja_env = JinjaEnvironment(
+            loader=jinja_loader,
+            autoescape=True,
+            extensions=['jinja2.ext.autoescape', 'jinja2.ext.with_'])
+
+        jinja_env.globals.update(
+            url_for=url_for,
+            request=request)
+
+        if settings.USE_I18N:
+            from kalapy.i18n.utils import gettext, ngettext
+            jinja_env.add_extension('jinja2.ext.i18n')
+            jinja_env.install_gettext_callables(gettext, ngettext, newstyle=True)
+
+        return jinja_env
+
     def _register_package(self, package):
+        """Register the given package and update the ``url_map`` and
+        ``view_functions`` provided by the given package.
+        """
         map(self.url_map.add, package.rules)
         self.view_functions.update(package.views)
 
@@ -216,8 +251,8 @@ class Application(object):
         so that wsgi middlewares can be applied without losing a reference to
         the class.
         """
-        _local.current_app = self
         _local.request = request = Request(environ)
+        request.current_app = self
         request.url_adapter = adapter = self.url_map.bind_to_environ(environ)
 
         signals.send('request-started')

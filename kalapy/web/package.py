@@ -115,8 +115,8 @@ class Package(object):
         self.add_rule('/%s/static/<filename>' % self.package.name,
             'static', build_only=True)
 
-        # create template loader
-        self.jinja_loader = FileSystemLoader(os.path.join(self.path, 'templates'))
+        # template directory
+        self._template_dir = os.path.join(self.path, 'templates')
 
     @property
     def package(self):
@@ -237,6 +237,13 @@ class PackageLoader(object):
         for package in self.packages.values():
             items = result.setdefault(package.static_prefix, [])
             items.insert(0, package._static_dir)
+        return dict([(k, tuple(v)) for k, v in result.items()])
+
+    def get_template_paths(self):
+        result = {}
+        for package in self.packages.values():
+            items = result.setdefault(package.package.name, [])
+            items.insert(0, package._template_dir)
         return dict([(k, tuple(v)) for k, v in result.items()])
 
 loader = PackageLoader()

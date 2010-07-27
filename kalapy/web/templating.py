@@ -20,20 +20,6 @@ from .local import request
 __all__ = ('render_template',)
 
 
-class JinjaLoader(BaseLoader):
-    """Custom Jinja template loader, loads the template from the
-    current package.
-    """
-    def get_source(self, environment, template):
-        package, name = template.split(':', 1)
-        try:
-            package = Package.ALL[package or None]
-            template = name
-        except KeyError:
-            package = Package.ALL[None]
-        return package.jinja_loader.get_source(environment, template)
-
-
 class JinjaEnvironment(Environment):
     """Custom Jinja environment, makes sure that template is correctly resolved.
     """
@@ -42,22 +28,6 @@ class JinjaEnvironment(Environment):
             package = parent.split(':',1)[0]
             return '%s:%s' % (package, template)
         return template
-
-
-jinja_env = JinjaEnvironment(
-    loader=JinjaLoader(),
-    autoescape=True,
-    extensions=['jinja2.ext.autoescape', 'jinja2.ext.with_'])
-
-
-jinja_env.globals.update(
-        url_for=url_for,
-        request=request)
-
-if settings.USE_I18N:
-    from kalapy.i18n.utils import gettext, ngettext
-    jinja_env.add_extension('jinja2.ext.i18n')
-    jinja_env.install_gettext_callables(gettext, ngettext, newstyle=True)
 
 
 def render_template(template, **context):
@@ -99,5 +69,4 @@ def render_template(template, **context):
     """
     if ':' not in template:
         template = '%s:%s' % (request.package, template)
-    return jinja_env.get_template(template).render(context)
-
+    return request.current_app.jinja_env.get_template(template).render(context)
