@@ -74,7 +74,7 @@ class Package(object):
         options = dict(NAME=self.name)
         try:
             execfile(os.path.join(self.path, 'settings.py'), {}, options)
-        except Exception, e:
+        except IOError:
             pass
         self.settings = Settings(package_settings, **options)
 
