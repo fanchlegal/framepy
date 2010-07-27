@@ -91,13 +91,11 @@ class Package(object):
     #: Package settings
     settings = None
 
-    def __init__(self, name, path=None):
+    def __init__(self, import_name):
 
-        if path is None:
-            path = os.path.abspath(os.path.dirname(sys.modules[name].__file__))
-
-        self.name = name
-        self.path = path
+        self.name = get_package_name(import_name)
+        self.path = os.path.abspath(
+            os.path.dirname(sys.modules[import_name].__file__))
 
         options = dict(NAME=self.name)
         try:
@@ -110,20 +108,31 @@ class Package(object):
         self.rules = []
         self.views = {}
 
-        # static dir info
-        self.static = os.path.join(self.path, 'static')
-        if not os.path.isdir(self.static):
-            self.static = None
+        # static directory
+        self._static_dir = os.path.join(self.path, 'static')
 
         # add rule for static urls
-        if self.static:
-            prefix = '/%s/static' % name
-            self.add_rule('%s/<filename>' % prefix, 'static', build_only=True)
-            prefix = '%s%s' % (self.submount or '', prefix)
-            self.static = (prefix, self.static)
+        self.add_rule('/%s/static/<filename>' % self.package.name,
+            'static', build_only=True)
 
         # create template loader
         self.jinja_loader = FileSystemLoader(os.path.join(self.path, 'templates'))
+
+    @property
+    def package(self):
+        """The parent package this package is extending otherwise the self.
+        """
+        if self.settings.EXTENDS:
+            assert self.settings.EXTENDS in settings.INSTALLED_PACKAGES, \
+                "no such package installed: %s" % self.settings.EXTENDS
+            return Package(self.settings.EXTENDS)
+        return self
+
+    @property
+    def static_prefix(self):
+        return "%s/%s/static" % (
+            self.settings.SUBMOUNT or '',
+            self.package.name)
 
     def add_rule(self, rule, endpoint, func=None, **options):
         """Add URL rule with the specified rule string, endpoint, view
@@ -143,7 +152,7 @@ class Package(object):
             endpoint = '%s.%s' % (func.__module__, func.__name__)
             __, endpoint = endpoint.rsplit('views.', 1)
 
-        endpoint = '%s.%s' % (self.name, endpoint)
+        endpoint = '%s.%s' % (self.package.name, endpoint)
 
         options.setdefault('methods', ('GET',))
         options['endpoint'] = endpoint
@@ -222,5 +231,12 @@ class PackageLoader(object):
             self.loaded = True
         finally:
             self.lock.release()
+
+    def get_static_paths(self):
+        result = {}
+        for package in self.packages.values():
+            items = result.setdefault(package.static_prefix, [])
+            items.insert(0, package._static_dir)
+        return dict([(k, tuple(v)) for k, v in result.items()])
 
 loader = PackageLoader()

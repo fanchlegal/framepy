@@ -8,6 +8,8 @@ This module implements WSGI :class:`Application` and :class:`Middleware`.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
+import os
+
 from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
 from werkzeug.routing import Rule, Map
 from werkzeug.exceptions import HTTPException
@@ -65,6 +67,22 @@ class Middleware(object):
         pass
 
 
+class StaticMiddleware(SharedDataMiddleware):
+    """Custom SharedDataMiddleware to support static directory overriding by
+    addon packages.
+    """
+    def get_package_loader(self, *paths):
+        def loader(path):
+            if path is None:
+                return None, None
+            for part in paths:
+                filename = os.path.join(part, path)
+                if os.path.isfile(filename):
+                    return os.path.basename(path), self._opener(filename)
+            return None, None
+        return loader
+
+
 class ApplicationType(type):
     """A metaclass to ensure singleton Application instance.
     """
@@ -111,10 +129,14 @@ class Application(object):
             self.middlewares.append(mc())
 
         # static data middleware
-        static_dirs = [p.static for p in loader.packages.values() if p.static]
-        ##if self.static:
-        ##    static_dirs.append(self.static)
-        self.dispatch = SharedDataMiddleware(self.dispatch, dict(static_dirs))
+        paths = loader.get_static_paths()
+        paths['/static'] = (os.path.join(settings.PROJECT_DIR, 'static'),)
+
+        self.url_map.add(
+            Rule('/static/<filename>',
+                endpoint='static', methods=('GET',), build_only=True))
+
+        self.dispatch = StaticMiddleware(self.dispatch, paths)
 
     def _register_package(self, package):
         map(self.url_map.add, package.rules)

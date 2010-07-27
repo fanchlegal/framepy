@@ -124,7 +124,7 @@ def url_for(endpoint, **values):
         if not reference:
             reference = request.package
     if reference:
-            endpoint = '%s.%s' % (reference, endpoint)
+        endpoint = '%s.%s' % (reference, endpoint)
     return request.url_adapter.build(endpoint, values, force_external=external)
 
 
