@@ -73,8 +73,8 @@ class Application(Package):
 
     def __init__(self):
 
-        # load all the settings.INSTALLED_PACKAGES
-        from kalapy.conf.loader import loader
+        # load all the INSTALLED_PACKAGES
+        from kalapy.web.package import loader
         loader.load()
 
         super(Application, self).__init__(

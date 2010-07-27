@@ -51,7 +51,7 @@ def route(rule, **options):
                     :class:`werkzeug.routing.Rule` object.
     """
     def wrapper(func):
-        package = Package.from_view(func)
+        package = Package.from_view_function(func)
         return package.route(rule, **options)(func)
     return wrapper
 
@@ -163,4 +163,3 @@ def jsonify(*args, **kw):
     :returns: an instance of :class:`Response`
     """
     return Response(json.dumps(dict(*args, **kw)), mimetype='application/json')
-

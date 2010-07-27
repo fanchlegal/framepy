@@ -13,7 +13,6 @@ import sys
 from kalapy import db
 from kalapy.admin import ActionCommand
 from kalapy.conf import settings
-from kalapy.conf.loader import loader
 from kalapy.db.engines import database
 
 
@@ -55,7 +54,8 @@ class DBCommand(ActionCommand):
 
         database.connect()
         try:
-            # load packages
+            # load all the INSTALLED_PACKAGES
+            from kalapy.web.package import loader
             loader.load()
             super(DBCommand, self).execute(options, args)
         finally:

@@ -91,11 +91,12 @@ def run_tests(names, verbosity=1):
     """
 
     from kalapy.db.engines import database
-    from kalapy.conf.loader import loader
+    from kalapy.web.package import loader
 
     database.connect()
     try:
-        loader.load() # load all packages
+        # load all the INSTALLED_PACKAGES
+        loader.load()
         suite = unittest.TestSuite()
         for name in names:
             suite.addTest(build_suite(name))

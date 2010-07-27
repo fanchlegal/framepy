@@ -29,8 +29,8 @@ class ScriptCommand(Command):
         if not os.path.exists(script):
             self.error("%r doesn't exist." % script)
 
-        # load the packages
-        from kalapy.conf.loader import loader
+        # load all the INSTALLED_PACKAGES
+        from kalapy.web.package import loader
         loader.load()
 
         execfile(script, {'__name__': '__main__'})
