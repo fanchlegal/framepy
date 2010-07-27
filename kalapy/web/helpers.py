@@ -14,11 +14,10 @@ except ImportError:
     import json
 
 from werkzeug import redirect
-from kalapy.conf import settings
 
-from .local import request
-from .package import Package
-from .wrappers import Response
+from kalapy.web.local import request
+from kalapy.web.package import Package
+from kalapy.web.wrappers import Response
 
 
 __all__ = ('route', 'url_for', 'locate', 'jsonify',)

@@ -15,10 +15,8 @@ try:
 except ImportError:
     import dummy_threading as threading
 
-from jinja2 import FileSystemLoader
-
 from werkzeug import find_modules, import_string
-from werkzeug.routing import Rule, Map
+from werkzeug.routing import Rule
 
 from kalapy.conf import Settings, settings, package_settings
 from kalapy.utils.containers import OrderedDict

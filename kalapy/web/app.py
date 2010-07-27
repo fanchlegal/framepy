@@ -10,19 +10,18 @@ This module implements WSGI :class:`Application` and :class:`Middleware`.
 """
 import os
 
-from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
-from werkzeug.routing import Rule, Map
-from werkzeug.exceptions import HTTPException
-
 from jinja2.loaders import PrefixLoader, FileSystemLoader
+from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
+from werkzeug.exceptions import HTTPException
+from werkzeug.routing import Rule, Map
 
 from kalapy.conf import settings
 from kalapy.utils import signals
 
-from .local import _local, _local_manager, request
-from .helpers import url_for
-from .wrappers import Request, Response
-from .templating import JinjaEnvironment
+from kalapy.web.helpers import url_for
+from kalapy.web.local import _local, _local_manager, request
+from kalapy.web.templating import JinjaEnvironment
+from kalapy.web.wrappers import Request, Response
 
 
 __all__ = ('Middleware', 'Application', 'simple_server',)

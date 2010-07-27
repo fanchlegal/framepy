@@ -8,13 +8,9 @@ Implements templating support using Jinja2.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
-from jinja2 import Environment, BaseLoader
+from jinja2 import Environment
 
-from kalapy.conf import settings
-
-from .package import Package
-from .helpers import url_for
-from .local import request
+from kalapy.web.local import request
 
 
 __all__ = ('render_template',)

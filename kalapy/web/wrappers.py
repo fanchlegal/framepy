@@ -8,8 +8,8 @@ Implements :class:`Request` and :class:`Response`.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
-
 from werkzeug import Request as BaseRequest, Response as BaseResponse
+
 
 __all__ = ('Request', 'Response',)
 
