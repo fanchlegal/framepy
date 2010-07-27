@@ -82,11 +82,11 @@ class Package(object):
     """
     __metaclass__ = PackageType
 
-    #: :class:`werkzeug.routing.Map` instance, shared among all the Packages
-    urls = Map()
+    #: list of :class:`werkzeug.routing.Rule` objects, defined by this package.
+    rules = None
 
-    #: view functions, shared among all the packages
-    views = {}
+    #: view functions provided by this package.
+    views = None
 
     #: Package settings
     settings = None
@@ -107,6 +107,8 @@ class Package(object):
         self.settings = Settings(package_settings, **options)
 
         self.submount = self.settings.SUBMOUNT
+        self.rules = []
+        self.views = {}
 
         # static dir info
         self.static = os.path.join(self.path, 'static')
@@ -115,33 +117,13 @@ class Package(object):
 
         # add rule for static urls
         if self.static:
-            prefix = '/static' if self.is_main else '/%s/static' % name
+            prefix = '/%s/static' % name
             self.add_rule('%s/<filename>' % prefix, 'static', build_only=True)
             prefix = '%s%s' % (self.submount or '', prefix)
             self.static = (prefix, self.static)
 
         # create template loader
-        self.jinja_loader = FileSystemLoader(self.get_resource_path('templates'))
-
-    @property
-    def is_main(self):
-        """Whether this is the main package (the project package)
-        """
-        return self.name == settings.PROJECT_NAME
-
-    def get_resource_path(self, name):
-        """Get the absolute path the the given resource.
-
-        :param name: path to the resource relative to this package
-        """
-        return os.path.join(self.path, name)
-
-    def get_resource_stream(self, name):
-        """Returns file stream object of the given resource.
-
-        :param name: path to the resource relative to this package
-        """
-        return open(self.get_resource_path(name), 'rb')
+        self.jinja_loader = FileSystemLoader(os.path.join(self.path, 'templates'))
 
     def add_rule(self, rule, endpoint, func=None, **options):
         """Add URL rule with the specified rule string, endpoint, view
@@ -161,8 +143,7 @@ class Package(object):
             endpoint = '%s.%s' % (func.__module__, func.__name__)
             __, endpoint = endpoint.rsplit('views.', 1)
 
-        if not self.is_main:
-            endpoint = '%s.%s' % (self.name, endpoint)
+        endpoint = '%s.%s' % (self.name, endpoint)
 
         options.setdefault('methods', ('GET',))
         options['endpoint'] = endpoint
@@ -170,7 +151,7 @@ class Package(object):
         if self.submount:
             rule = '%s%s' % (self.submount, rule)
 
-        self.urls.add(Rule(rule, **options))
+        self.rules.append(Rule(rule, **options))
         self.views[endpoint] = func
 
     def route(self, rule, **options):

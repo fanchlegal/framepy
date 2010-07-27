@@ -9,13 +9,13 @@ This module implements WSGI :class:`Application` and :class:`Middleware`.
 :license: BSD, see LICENSE for more details.
 """
 from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
+from werkzeug.routing import Rule, Map
 from werkzeug.exceptions import HTTPException
 
 from kalapy.conf import settings
 from kalapy.utils import signals
 
 from .wrappers import Request, Response
-from .package import Package
 from .local import _local, _local_manager
 
 
@@ -65,24 +65,42 @@ class Middleware(object):
         pass
 
 
-class Application(Package):
+class ApplicationType(type):
+    """A metaclass to ensure singleton Application instance.
+    """
+    instance = None
+    def __call__(cls):
+        if cls.instance is None:
+            cls.instance = super(ApplicationType, cls).__call__()
+        return cls.instance
+
+
+class Application(object):
     """The Application class implements a WSGI application. This class is
     responsible to request dispatching, middleware processing, generating
     proper response from the view function return values etc.
     """
+    __metaclass__ = ApplicationType
+
+    #: The :class:`~werkzeug.routing.Map` instance for :class:`~werkzeug.routing.Rule`
+    #: registered by all the installed packages.
+    url_map = Map()
+
+    #: The dictionary of all the view functions registered by all the installed
+    #: packages.
+    view_functions = {}
 
     def __init__(self):
+
+        self.debug = settings.DEBUG
+        _local.current_app = self
 
         # load all the INSTALLED_PACKAGES
         from kalapy.web.package import loader
         loader.load()
 
-        super(Application, self).__init__(
-                settings.PROJECT_NAME,
-                settings.PROJECT_DIR)
-
-        self.debug = settings.DEBUG
-        _local.current_app = self
+        # register all the packages
+        map(self._register_package, loader.packages.values())
 
         #: list of all the registered middlewares
         self.middlewares = []
@@ -93,10 +111,14 @@ class Application(Package):
             self.middlewares.append(mc())
 
         # static data middleware
-        static_dirs = [p.static for p in Package.ALL.values() if p.static]
-        if self.static:
-            static_dirs.append(self.static)
+        static_dirs = [p.static for p in loader.packages.values() if p.static]
+        ##if self.static:
+        ##    static_dirs.append(self.static)
         self.dispatch = SharedDataMiddleware(self.dispatch, dict(static_dirs))
+
+    def _register_package(self, package):
+        map(self.url_map.add, package.rules)
+        self.view_functions.update(package.views)
 
     def process_request(self, request):
         """This method will be called before actual request dispatching and
@@ -157,7 +179,7 @@ class Application(Package):
 
         request.endpoint = endpoint
         request.view_args = args
-        request.view_func = func = self.views[endpoint]
+        request.view_func = func = self.view_functions[endpoint]
 
         try:
             return self.make_response(func(**args))
@@ -174,7 +196,7 @@ class Application(Package):
         """
         _local.current_app = self
         _local.request = request = Request(environ)
-        request.url_adapter = adapter = self.urls.bind_to_environ(environ)
+        request.url_adapter = adapter = self.url_map.bind_to_environ(environ)
 
         signals.send('request-started')
         try:
@@ -209,4 +231,3 @@ def simple_server(host='127.0.0.1', port=8080, use_reloader=False):
     app = Application()
     app.debug = debug = settings.DEBUG
     run_simple(host, port, app, use_reloader=use_reloader, use_debugger=debug)
-
