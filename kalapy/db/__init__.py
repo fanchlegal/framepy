@@ -11,11 +11,10 @@ inspired of OpenERP and Django ORM.
 from kalapy.db.engines import DatabaseError, IntegrityError, \
     commit, rollback, run_in_transaction
 
-from fields import *
-from reference import *
-from model import *
-from query import *
+from kalapy.db.fields import *
+from kalapy.db.reference import *
+from kalapy.db.model import *
+from kalapy.db.query import *
 
 # remove module references to hide them from direct outside access
 map(lambda n: globals().pop(n), ['engines', 'model', 'fields', 'query', 'reference'])
-

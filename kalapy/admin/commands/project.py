@@ -48,7 +48,7 @@ def copy_template(template, target, context):
         #XXX: make python scripts executable (pip install issue?)
         if dstname.endswith('.py') and open(dstname).read(2) == '#!':
             try:
-                os.chmod(dstname, mode)
+                os.chmod(dstname, 0775)
             except:
                 pass
 
@@ -199,4 +199,3 @@ class GAEProject(ActionCommand):
                 if x in args:
                     os.remove(f)
         os.path.walk("lib", do_clean, ['.pyc', '.pyo', '.so'])
-
