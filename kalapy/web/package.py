@@ -18,6 +18,7 @@ except ImportError:
 from werkzeug import find_modules, import_string
 from werkzeug.routing import Rule
 
+from kalapy.pool import pool
 from kalapy.conf import Settings, settings, package_settings
 from kalapy.utils.containers import OrderedDict
 
@@ -80,12 +81,6 @@ class Package(object):
     """
     __metaclass__ = PackageType
 
-    #: list of :class:`werkzeug.routing.Rule` objects, defined by this package.
-    rules = None
-
-    #: view functions provided by this package.
-    views = None
-
     #: Package settings
     settings = None
 
@@ -103,8 +98,6 @@ class Package(object):
         self.settings = Settings(package_settings, **options)
 
         self.submount = self.settings.SUBMOUNT
-        self.rules = []
-        self.views = {}
 
         # static directory
         self._static_dir = os.path.join(self.path, 'static')
@@ -158,8 +151,8 @@ class Package(object):
         if self.submount:
             rule = '%s%s' % (self.submount, rule)
 
-        self.rules.append(Rule(rule, **options))
-        self.views[endpoint] = func
+        pool.url_map.add(Rule(rule, **options))
+        pool.view_functions[endpoint] = func
 
     def route(self, rule, **options):
         """Same as :func:`route`
@@ -168,80 +161,3 @@ class Package(object):
             self.add_rule(rule, None, func, **options)
             return func
         return wrapper
-
-
-class PackageLoader(object):
-    """Package loader automatically loads all the installed packages
-    listed in ``settings.INSTALLED_PACKAGES``.
-    """
-
-    __shared_state = dict(
-        packages = OrderedDict(),
-        loaded = False,
-        lock = threading.RLock(),
-    )
-
-    def __init__(self):
-        self.__dict__ = self.__shared_state
-
-    def load_modules(self, package, name):
-
-        modules = tuple(find_modules(package, include_packages=True))
-        fullname = '%s.%s' % (package, name)
-
-        result = []
-
-        if fullname in modules:
-            mod = import_string(fullname)
-            result.append(mod)
-
-        try:
-            submodules = tuple(find_modules(fullname))
-        except (ValueError, AttributeError):
-            return result
-
-        for module in submodules:
-            mod = import_string(module)
-            result.append(mod)
-
-        return result
-
-    def load(self):
-        """Load the installed packages.
-        """
-        if self.loaded:
-            return
-
-        self.lock.acquire()
-        try:
-            for package in settings.INSTALLED_PACKAGES:
-                if package in self.packages:
-                    continue
-
-                if package not in sys.modules:
-                    import_string(package)
-
-                self.packages[package] = pkg = Package(package)
-
-                self.load_modules(package, 'models')
-                self.load_modules(package, 'views')
-
-            self.loaded = True
-        finally:
-            self.lock.release()
-
-    def get_static_paths(self):
-        result = {}
-        for package in self.packages.values():
-            items = result.setdefault(package.static_prefix, [])
-            items.insert(0, package._static_dir)
-        return dict([(k, tuple(v)) for k, v in result.items()])
-
-    def get_template_paths(self):
-        result = {}
-        for package in self.packages.values():
-            items = result.setdefault(package.package.name, [])
-            items.insert(0, package._template_dir)
-        return dict([(k, tuple(v)) for k, v in result.items()])
-
-loader = PackageLoader()

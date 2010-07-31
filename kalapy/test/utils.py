@@ -12,9 +12,7 @@ from werkzeug import find_modules, import_string
 
 __all__ = ('build_suite', 'run_tests')
 
-
 TEST_MODULE = 'tests'
-
 
 def build_suite(name):
     """Build test suite for the given name. A name can be either a package name
@@ -70,7 +68,6 @@ def build_suite(name):
 
     return suite
 
-
 def run_tests(names, verbosity=1):
     """Run unittests for all the test names.
 
@@ -90,13 +87,13 @@ def run_tests(names, verbosity=1):
     :param verbosity: verbose level
     """
 
+    from kalapy.pool import pool
     from kalapy.db.engines import database
-    from kalapy.web.package import loader
 
     database.connect()
     try:
-        # load all the INSTALLED_PACKAGES
-        loader.load()
+        # Initialize the object pool
+        pool.load()
         suite = unittest.TestSuite()
         for name in names:
             suite.addTest(build_suite(name))
@@ -105,4 +102,3 @@ def run_tests(names, verbosity=1):
         database.close()
 
     return len(result.failures) + len(result.errors)
-

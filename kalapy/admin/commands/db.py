@@ -54,9 +54,9 @@ class DBCommand(ActionCommand):
 
         database.connect()
         try:
-            # load all the INSTALLED_PACKAGES
-            from kalapy.web.package import loader
-            loader.load()
+            # Initialize the object pool
+            from kalapy.pool import pool
+            pool.load()
             super(DBCommand, self).execute(options, args)
         finally:
             database.close()
@@ -171,4 +171,3 @@ Are you sure about this action? (y/N): """ % settings.DATABASE_NAME)
             raise
         else:
             database.commit()
-

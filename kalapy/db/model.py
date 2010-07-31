@@ -10,6 +10,7 @@ and get_models functions.
 """
 import sys, types
 
+from kalapy.pool import pool
 from kalapy.db.fields import Field, AutoKey, FieldError
 from kalapy.db.query import Query
 from kalapy.utils.containers import OrderedDict
@@ -18,93 +19,8 @@ from kalapy.utils.containers import OrderedDict
 __all__ = ('Model', 'get_model', 'get_models')
 
 
-class ModelCache(object):
-    """A class to manage cache of all models.
-    """
-
-    # Borg pattern
-    __shared_state = dict(
-        cache = {},
-        aliases = {},
-        packages = {},
-        pending = {},
-    )
-
-    def __init__(self):
-        self.__dict__ = self.__shared_state
-
-    def get_model(self, model_name):
-        """Get the model from the cache of the given name. The format of the `model_name`
-        should `package:name`.
-
-        For example::
-
-            >>> get_model('foo:Foo')
-            >>> get_model('bar:Bar')
-
-        The `name` part in the `model_name` is case insensitive.
-
-        :param model_name: name of the model
-
-        :returns: model class or None
-        """
-        if isinstance(model_name, ModelType):
-            model_name = model_name._meta.name
-
-        assert model_name.count(':') == 1, 'Invalid model name format'
-
-        package, name = model_name.split(':')
-        alias = self.aliases.get(model_name.lower(), model_name.lower())
-        try:
-            return self.cache[alias]
-        except KeyError:
-            raise TypeError(
-                _('No such model %(name)r in package %(package)r',
-                    name=name, package=package))
-
-
-    def get_models(self, *packages):
-        """Get the list of all models from the cache for the provided package names.
-        If package names are not provided returns list of all models.
-
-        :arg packages: package names
-
-        :returns: list of models
-        """
-        result = []
-        for package in packages or self.packages:
-            try:
-                result.extend(map(self.cache.get, self.packages[package]))
-            except KeyError:
-                raise Exception(_('No such package %(name)r', name=package))
-        return result
-
-    def register_model(self, cls):
-        """Register the provided model class to the cache.
-
-        :param cls: the model class
-        """
-        package, name = cls._meta.package, cls._meta.name
-        names = self.packages.setdefault(package, [])
-        if name not in names:
-            names.append(name)
-
-        alias = cls.__name__
-        if package:
-            alias = '%s:%s' % (package, alias)
-
-        self.aliases[alias] = name
-        self.cache[name] = cls
-
-        # resolve any pending references
-        for field in self.pending.pop(alias, []):
-            field.prepare(field.model_class)
-
-
-cache = ModelCache()
-
-get_model = cache.get_model
-get_models = cache.get_models
+get_model = pool.get_model
+get_models = pool.get_models
 
 
 class Options(object):
@@ -165,7 +81,7 @@ class ModelType(type):
         meta = getattr(parents[0], '_meta', None) or Options()
 
         try:
-            parent = cache.get_model(meta.name) if meta.name else None
+            parent = pool.get_model(meta.name) if meta.name else None
         except KeyError:
             parent = None
 
@@ -200,8 +116,8 @@ class ModelType(type):
         if not parent:
             cls.add_field(AutoKey())
 
-        # overwrite model class in the cache
-        cache.register_model(cls)
+        # overwrite model class in the pool
+        pool.register_model(cls)
 
         cls._values = None
 
@@ -379,7 +295,7 @@ class Model(object):
     def __new__(cls, **kw):
         if cls is Model:
             raise TypeError(_("You can't create instance of Model class"))
-        klass = cache.get_model(cls)
+        klass = pool.get_model(cls)
         return super(Model, cls).__new__(klass)
 
     def __init__(self, **kw):

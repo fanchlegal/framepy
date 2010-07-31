@@ -8,8 +8,9 @@ one-to-one, many-to-one and many-to-many between models.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
+from kalapy.pool import pool
 from kalapy.db.fields import Field, FieldError
-from kalapy.db.model import ModelType, Model, cache
+from kalapy.db.model import ModelType, Model
 
 
 __all__ = ('ManyToOne', 'OneToOne', 'OneToMany', 'ManyToMany')
@@ -32,9 +33,9 @@ class IRelation(Field):
         if isinstance(ref, basestring) and ':' not in ref:
             self._reference = ref = '%s:%s' % (model_class._meta.package, ref)
         try:
-            ref = cache.get_model(ref)
+            ref = pool.get_model(ref)
         except:
-            cache.pending.setdefault(ref, []).append(self)
+            pool.model_pending.setdefault(ref, []).append(self)
         else:
             self.prepare(model_class)
 
@@ -50,7 +51,7 @@ class IRelation(Field):
     def reference(self):
         """Returns the reference class.
         """
-        return cache.get_model(self._reference)
+        return pool.get_model(self._reference)
 
     @property
     def is_virtual(self):
@@ -577,4 +578,3 @@ class ManyToMany(IRelation):
     def __set__(self, model_instance, value):
         raise ValueError(
             _('Field %(name)r is readonly.', name=self.name))
-

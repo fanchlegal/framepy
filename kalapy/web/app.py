@@ -15,6 +15,7 @@ from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
 from werkzeug.exceptions import HTTPException
 from werkzeug.routing import Rule, Map
 
+from kalapy.pool import pool
 from kalapy.conf import settings
 from kalapy.utils import signals
 
@@ -103,24 +104,13 @@ class Application(object):
     """
     __metaclass__ = ApplicationType
 
-    #: The :class:`~werkzeug.routing.Map` instance for :class:`~werkzeug.routing.Rule`
-    #: registered by all the installed packages.
-    url_map = Map()
-
-    #: The dictionary of all the view functions registered by all the installed
-    #: packages.
-    view_functions = {}
 
     def __init__(self):
 
         self.debug = settings.DEBUG
 
-        # load all the INSTALLED_PACKAGES
-        from kalapy.web.package import loader
-        loader.load()
-
-        # register all the packages
-        map(self._register_package, loader.packages.values())
+        # Initialize the object pool
+        pool.load()
 
         #: list of all the registered middlewares
         self.middlewares = []
@@ -131,17 +121,17 @@ class Application(object):
             self.middlewares.append(mc())
 
         # static data middleware
-        paths = loader.get_static_paths()
+        paths = pool.get_static_paths()
         paths['/static'] = (os.path.join(settings.PROJECT_DIR, 'static'),)
 
-        self.url_map.add(
+        pool.url_map.add(
             Rule('/static/<filename>',
                 endpoint='static', methods=('GET',), build_only=True))
 
         self.dispatch = StaticMiddleware(self.dispatch, paths)
 
         # create jinja env
-        self.jinja_env = self._create_jinja_env(loader.get_template_paths())
+        self.jinja_env = self._create_jinja_env(pool.get_template_paths())
 
 
     def _create_jinja_env(self, paths):
@@ -168,13 +158,6 @@ class Application(object):
             jinja_env.install_gettext_callables(gettext, ngettext, newstyle=True)
 
         return jinja_env
-
-    def _register_package(self, package):
-        """Register the given package and update the ``url_map`` and
-        ``view_functions`` provided by the given package.
-        """
-        map(self.url_map.add, package.rules)
-        self.view_functions.update(package.views)
 
     def process_request(self, request):
         """This method will be called before actual request dispatching and
@@ -235,7 +218,7 @@ class Application(object):
 
         request.endpoint = endpoint
         request.view_args = args
-        request.view_func = func = self.view_functions[endpoint]
+        request.view_func = func = pool.view_functions[endpoint]
 
         try:
             return self.make_response(func(**args))
@@ -252,7 +235,7 @@ class Application(object):
         """
         _local.request = request = Request(environ)
         request.current_app = self
-        request.url_adapter = adapter = self.url_map.bind_to_environ(environ)
+        request.url_adapter = adapter = pool.url_map.bind_to_environ(environ)
 
         signals.send('request-started')
         try:
