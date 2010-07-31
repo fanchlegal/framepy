@@ -26,28 +26,6 @@ from kalapy.utils.containers import OrderedDict
 __all__ = ('Package',)
 
 
-def get_package_name(module_name):
-    """Return the package name from the given module name.
-
-    This function takes care of ``rapido.contrib`` packages returning
-    correct package name.
-
-        >>> print get_package_name('hello.models')
-        ... 'hello'
-        >>> print get_package_name('hello.views.foo')
-        ... 'hello'
-        >>> print get_package_name('kalapy.contrib.sessions.models')
-        ... 'sessions'
-        >>> print get_package_name('hello')
-        ... 'hello'
-
-    :param module: a string, module name
-    """
-    if module_name.startswith('kalapy.contrib.'):
-        module_name = module_name[15:]
-    return module_name.split('.', 1)[0]
-
-
 class PackageType(type):
     """A meta class to ensure only one instance of :class:`Package` exists
     for a given package name.
@@ -65,7 +43,7 @@ class PackageType(type):
     def from_view_function(cls, func):
         """A factory method to create package instance from the view function.
         """
-        return cls(get_package_name(func.__module__))
+        return cls(pool.get_package_name(func.__module__))
 
 
 class Package(object):
@@ -86,7 +64,7 @@ class Package(object):
 
     def __init__(self, import_name):
 
-        self.name = get_package_name(import_name)
+        self.name = pool.get_package_name(import_name)
         self.path = os.path.abspath(
             os.path.dirname(sys.modules[import_name].__file__))
 

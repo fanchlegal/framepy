@@ -87,8 +87,7 @@ class ModelType(type):
 
         if meta.package is None:
             try:
-                meta.package = attrs['__module__'].replace('models.', '', 1) \
-                                                  .split('.')[-2]
+                meta.package = pool.get_package(attrs['__module__']).package.name
             except:
                 meta.package = ''
 
