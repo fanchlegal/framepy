@@ -75,8 +75,6 @@ class Package(object):
             pass
         self.settings = Settings(package_settings, **options)
 
-        self.submount = self.settings.SUBMOUNT
-
         # static directory
         self._static_dir = os.path.join(self.path, 'static')
 
@@ -86,6 +84,15 @@ class Package(object):
 
         # template directory
         self._template_dir = os.path.join(self.path, 'templates')
+
+    @property
+    def submount(self):
+        """Submount for the package. If this is an addon package then it is
+        the same as the extending package.
+        """
+        if self.settings.EXTENDS:
+            return self.package.submount
+        return self.settings.SUBMOUNT
 
     @property
     def package(self):
@@ -100,7 +107,7 @@ class Package(object):
     @property
     def static_prefix(self):
         return "%s/%s/static" % (
-            self.settings.SUBMOUNT or '',
+            self.submount or '',
             self.package.name)
 
     def add_rule(self, rule, endpoint, func=None, **options):
