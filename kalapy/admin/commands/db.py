@@ -71,7 +71,10 @@ class DBCommand(ActionCommand):
         :param packages: sequence of package names
         :returns: a tuple
         """
-        models = db.get_models(*packages)
+        try:
+            models = db.get_models(*packages)
+        except Exception, e:
+            self.error(e)
 
         result = []
         pending = []

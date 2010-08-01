@@ -102,7 +102,7 @@ class Pool(object):
                 if package not in sys.modules:
                     import_string(package)
 
-                self.packages[package] = pkg = Package(package)
+                self.packages[package] = Package(package)
 
                 self.load_modules(package, 'models')
                 self.load_modules(package, 'views')
@@ -125,6 +125,7 @@ class Pool(object):
         :param model_name: name of the model
 
         :returns: a Model class or None
+        :raises: :class:`~TypeError` if model is not found.
         """
         from kalapy.db.model import ModelType
 
@@ -149,6 +150,7 @@ class Pool(object):
         :arg packages: package names
 
         :returns: list of models
+        :raises: :class:`~TypeError` if a package is not found.
         """
         result = []
         for package in (packages or self.model_cache):
@@ -156,7 +158,7 @@ class Pool(object):
                 result.extend(self.model_cache[package].values())
             except KeyError:
                 if package not in self.packages:
-                    raise Exception(_('No such package %(name)r', name=package))
+                    raise TypeError(_('No such package %(name)r', name=package))
         return result
 
     def register_model(self, cls):

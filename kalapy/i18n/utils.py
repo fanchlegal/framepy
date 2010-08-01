@@ -137,4 +137,3 @@ def ngettext(string, plural, num, **kwargs):
         kw.setdefault('num', n)
         return get_translations().ungettext(s, p, n) % kw
     return LazyProxy(lazy, string, plural, num, **kwargs)
-
