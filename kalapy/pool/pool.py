@@ -8,7 +8,9 @@ provided by them.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
-import os, sys
+from __future__ import absolute_import
+
+import os, sys, logging
 
 try:
     import threading
@@ -20,6 +22,12 @@ from werkzeug.routing import Map
 
 from kalapy.conf import settings
 from kalapy.utils.containers import OrderedDict
+
+
+__all__ = ('pool',)
+
+
+logger = logging.getLogger('pool')
 
 
 class Pool(object):
@@ -71,6 +79,7 @@ class Pool(object):
         result = []
 
         if fullname in modules:
+            logger.info(' * Loading module: %s' % fullname)
             mod = import_string(fullname)
             result.append(mod)
 
@@ -80,6 +89,7 @@ class Pool(object):
             return result
 
         for module in submodules:
+            logger.info(' * Loading module: %s' % module)
             mod = import_string(module)
             result.append(mod)
 
@@ -98,7 +108,7 @@ class Pool(object):
             for package in settings.INSTALLED_PACKAGES:
                 if package in self.packages:
                     continue
-
+                logger.info(' * Loading package: %s' % package)
                 if package not in sys.modules:
                     import_string(package)
 

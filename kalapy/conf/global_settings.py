@@ -30,6 +30,11 @@ SESSION_COOKIE = {
     'path': '/'
 }
 
+LOGGING = {
+    'level': 'DEBUG',
+    'format': '[%(asctime)s] %(levelname)s:%(name)s:%(message)s',
+    'logfile': None,
+}
+
 INSTALLED_PACKAGES = (
 )
-

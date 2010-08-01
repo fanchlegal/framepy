@@ -153,6 +153,20 @@ Default::
 
 Session cookie options.
 
+LOGGING
++++++++
+
+Default::
+
+    LOGGING = {
+        'level': 'DEBUG',
+        'format': '[%(asctime)s] %(levelname)s:%(name)s:%(message)s',
+        'logfile': None,
+    }
+
+Settings for logging. The ``level`` can be one of ``'INFO'``, ``'DEBUG'`` or
+``'ERROR'``. If ``logfile`` is not provided, `stderr` will be assumed.
+
 INSTALLED_PACKAGES
 ++++++++++++++++++
 
@@ -193,6 +207,7 @@ VERSION
 +++++++
 
 Default::
+
     VERSION = "1.0"
 
 Package version string.

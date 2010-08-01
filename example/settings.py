@@ -65,6 +65,16 @@ SESSION_COOKIE = {
     'path': '/'
 }
 
+# Settings for logging.
+#
+# The level can be one of 'INFO', 'DEBUG' or 'ERROR'
+# If logfile is not provided, stderr will be assumed.
+LOGGING = {
+    'level': 'DEBUG',
+    'format': '[%(asctime)s] %(levelname)s:%(name)s:%(message)s',
+    'logfile': None,
+}
+
 # List of installed packages
 INSTALLED_PACKAGES = (
     'kalapy.contrib.sessions',

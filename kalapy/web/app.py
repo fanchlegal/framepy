@@ -109,6 +109,9 @@ class Application(object):
 
         self.debug = settings.DEBUG
 
+        from kalapy.pool.logging import init_logger
+        init_logger()
+
         # Initialize the object pool
         pool.load()
 
