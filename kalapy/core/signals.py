@@ -14,7 +14,7 @@ can be fired with :func:`send` method.
 
 For example::
 
-    from kalapy.utils import signals
+    from kalapy.core import signals
 
     @signals.connect('onfinish')
     def on_finish_1(state):
@@ -179,4 +179,3 @@ if __name__ == "__main__":
         print "Foo2 %s!" % data
 
     send('onfoo', data=2)
-

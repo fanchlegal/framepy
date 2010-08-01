@@ -10,7 +10,7 @@ and get_models functions.
 """
 import sys, types
 
-from kalapy.pool import pool
+from kalapy.core.pool import pool
 from kalapy.db.fields import Field, AutoKey, FieldError
 from kalapy.db.query import Query
 from kalapy.utils.containers import OrderedDict

@@ -14,7 +14,7 @@ from werkzeug import import_string
 from werkzeug.local import LocalStack
 
 from kalapy.conf import settings
-from kalapy.utils import signals
+from kalapy.core import signals
 
 
 __all__ = ('Database', 'DatabaseError', 'IntegrityError', 'database')
@@ -101,4 +101,3 @@ def rollback_connection(error):
     during request processing.
     """
     database.rollback()
-

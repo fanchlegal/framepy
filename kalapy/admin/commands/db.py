@@ -55,7 +55,7 @@ class DBCommand(ActionCommand):
         database.connect()
         try:
             # Initialize the object pool
-            from kalapy.pool import pool
+            from kalapy.core.pool import pool
             pool.load()
             super(DBCommand, self).execute(options, args)
         finally:

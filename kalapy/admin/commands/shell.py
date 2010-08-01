@@ -30,7 +30,7 @@ class ScriptCommand(Command):
             self.error("%r doesn't exist." % script)
 
         # Initialize the object pool
-        from kalapy.pool import pool
+        from kalapy.core.pool import pool
         pool.load()
 
         execfile(script, {'__name__': '__main__'})

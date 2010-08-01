@@ -87,7 +87,7 @@ def run_tests(names, verbosity=1):
     :param verbosity: verbose level
     """
 
-    from kalapy.pool import pool
+    from kalapy.core.pool import pool
     from kalapy.db.engines import database
 
     database.connect()

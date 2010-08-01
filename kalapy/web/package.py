@@ -18,9 +18,9 @@ except ImportError:
 from werkzeug import find_modules, import_string
 from werkzeug.routing import Rule
 
-from kalapy.pool import pool
 from kalapy.conf import Settings, settings, package_settings
 from kalapy.utils.containers import OrderedDict
+from kalapy.core.pool import pool
 
 
 __all__ = ('Package',)

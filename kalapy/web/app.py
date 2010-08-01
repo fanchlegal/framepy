@@ -15,9 +15,9 @@ from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
 from werkzeug.exceptions import HTTPException
 from werkzeug.routing import Rule, Map
 
-from kalapy.pool import pool
 from kalapy.conf import settings
-from kalapy.utils import signals
+from kalapy.core import signals
+from kalapy.core.pool import pool
 
 from kalapy.web.helpers import url_for
 from kalapy.web.local import _local, _local_manager, request
@@ -109,7 +109,7 @@ class Application(object):
 
         self.debug = settings.DEBUG
 
-        from kalapy.pool.logging import init_logger
+        from kalapy.core.logging import init_logger
         init_logger()
 
         # Initialize the object pool

@@ -8,7 +8,7 @@ one-to-one, many-to-one and many-to-many between models.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
-from kalapy.pool import pool
+from kalapy.core.pool import pool
 from kalapy.db.fields import Field, FieldError
 from kalapy.db.model import ModelType, Model
 
