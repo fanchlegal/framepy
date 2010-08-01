@@ -1,5 +1,5 @@
 from kalapy.test import TestCase
-from kalapy.utils import signals
+from kalapy.core import signals
 
 
 class SignalTest(TestCase):
