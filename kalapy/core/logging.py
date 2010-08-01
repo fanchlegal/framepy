@@ -16,8 +16,11 @@ LOG_LEVELS = {
 }
 
 def init_logger():
-    """Initialize the logger.
+    """Initialize the logger. Do nothing for google app engine.
     """
+    if settings.DATABASE_ENGINE == "gae":
+        return
+
     level = settings.LOGGING.get('level') or 'INFO'
     format = settings.LOGGING.get('format') or LOG_FORMAT
     logfile = settings.LOGGING.get('logfile')
@@ -34,7 +37,7 @@ def init_logger():
         else:
             formatter = logging.Formatter(format)
             handler.setFormatter(formatter)
-            # get rid of all the handlers already attached to it.
+            # Get rid of all the handlers already attached to it.
             del logging.getLogger().handlers[:]
             logging.getLogger().addHandler(handler)
             logging.getLogger().setLevel(level)

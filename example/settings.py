@@ -65,7 +65,7 @@ SESSION_COOKIE = {
     'path': '/'
 }
 
-# Settings for logging.
+# Settings for logging. Ignored if DATABASE_ENGINE is 'gae'.
 #
 # The level can be one of 'INFO', 'DEBUG' or 'ERROR'
 # If logfile is not provided, stderr will be assumed.

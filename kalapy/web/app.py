@@ -18,6 +18,7 @@ from werkzeug.routing import Rule, Map
 from kalapy.conf import settings
 from kalapy.core import signals
 from kalapy.core.pool import pool
+from kalapy.core.logging import init_logger
 
 from kalapy.web.helpers import url_for
 from kalapy.web.local import _local, _local_manager, request
@@ -109,7 +110,7 @@ class Application(object):
 
         self.debug = settings.DEBUG
 
-        from kalapy.core.logging import init_logger
+        # Initialize logging.
         init_logger()
 
         # Initialize the object pool
