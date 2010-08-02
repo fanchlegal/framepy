@@ -80,4 +80,5 @@ INSTALLED_PACKAGES = (
     'kalapy.contrib.sessions',
     'main',
     'wiki',
+    'wiki_extended',
 )
