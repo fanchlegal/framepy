@@ -19,6 +19,7 @@ class RequestContext(object):
     and removed at the end of a request.
     """
     def __init__(self, app, request):
+        self.current_app = app
         self.request = request
 
     def __enter__(self):
@@ -26,7 +27,11 @@ class RequestContext(object):
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
-        _request_ctx_stack.pop()
+        # do not pop the stack if application is running in debug mode and
+        # there is any exception happened. This will help the debugger to
+        # access the request object in the interactive shell.
+        if tb is None or not self.current_app.debug:
+            _request_ctx_stack.pop()
 
 
 _request_ctx_stack = LocalStack()

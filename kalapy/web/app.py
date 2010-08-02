@@ -133,7 +133,6 @@ class Application(object):
         # create jinja env
         self.jinja_env = self._create_jinja_env(pool.get_template_paths())
 
-
     def _create_jinja_env(self, paths):
         """Creates Jinja template loader for the provided template paths.
         Returns a JinjaEnvironment instance.
@@ -241,9 +240,7 @@ class Application(object):
         req = Request(environ)
         ctx = RequestContext(self, req)
 
-        ctx.current_app = self
         ctx.url_adapter = pool.url_map.bind_to_environ(environ)
-
         try:
             req.endpoint, req.view_args = ctx.url_adapter.match()
             req.view_func = pool.view_functions[req.endpoint]
