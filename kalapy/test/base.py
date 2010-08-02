@@ -30,8 +30,23 @@ class TestCase(unittest.TestCase):
         :class:`werkzeug.Client`, which can be used to send virtual requests
         to the test application.
         """
-        self.client = Client(test_app(), Response)
+        self.test_app = test_app()
+        self.client = Client(self.test_app, Response)
         super(TestCase, self).__call__(result)
+
+    def request_context(self, *args, **kw):
+        """Create a request context for use in tests. The arguments passed will
+        be used to create a WSGI environment to create a request instance (see
+        :func:`werkzeug.create_environ` for more information). This method must
+        be used with the ``with`` statement.
+
+        For example::
+
+            with self.request_context():
+                do_something_with(request)
+        """
+        from werkzeug import create_environ
+        return self.test_app.request_context(create_environ(*args, **kw))
 
     def assertMatch(self, data, pattern, message=None, flags=0):
         """Tests whether the given pattern matches to the given data.
@@ -40,4 +55,3 @@ class TestCase(unittest.TestCase):
             if message is None:
                 message = 'No match for %r in the given data' % pattern
             raise self.failureException(message)
-

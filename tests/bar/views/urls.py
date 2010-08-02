@@ -10,4 +10,3 @@ def index():
 def bar():
     return web.render_template('bar.html')
 
-

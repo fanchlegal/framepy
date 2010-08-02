@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import with_statement
+
 from kalapy import web
 from kalapy.conf import settings
 from kalapy.test import TestCase
@@ -50,17 +52,27 @@ class CoreTest(TestCase):
             assert 'Expected ValueError'
 
     def test_url_generation(self):
-        assert web.url_for('response', kind="no thing", extra='test x') \
-            == '/response/no%20thing?extra=test+x'
-        assert web.url_for('response', kind="no thing", extra='test x', _external=True) \
-            == 'http://localhost/response/no%20thing?extra=test+x'
+        with self.request_context():
+            assert web.url_for('response', kind="no thing", extra='test x') \
+                == '/response/no%20thing?extra=test+x'
+            assert web.url_for('response', kind="no thing", extra='test x', _external=True) \
+                == 'http://localhost/response/no%20thing?extra=test+x'
+
+        with self.request_context():
+            assert web.url_for('bar:urls.index') == '/bar/'
+            assert web.url_for('bar:urls.bar') == '/bar/bar'
+
+        with self.request_context(path='/bar/'):
+            assert web.url_for('urls.bar') == '/bar/bar'
+            assert web.url_for('.bar') == '/bar/bar'
 
     def test_static_files(self):
-        static_file = web.url_for('static', filename='index.html')
-        assert static_file == '/core/static/index.html'
-        rv = self.client.get(static_file)
-        assert rv.status_code == 200
-        assert rv.data.strip() == '<h1>Hello World!</h1>'
+        with self.request_context():
+            static_file = web.url_for('static', filename='index.html')
+            assert static_file == '/core/static/index.html'
+            rv = self.client.get(static_file)
+            assert rv.status_code == 200
+            assert rv.data.strip() == '<h1>Hello World!</h1>'
 
 
 class JSONTest(TestCase):
@@ -106,4 +118,3 @@ class PackageTest(TestCase):
 /foo/foo/static/bar.js
 /bar/bar
 /foo/foo"""
-
