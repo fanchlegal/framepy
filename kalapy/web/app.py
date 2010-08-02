@@ -3,7 +3,7 @@
 kalapy.web.app
 ~~~~~~~~~~~~~~
 
-This module implements WSGI :class:`Application` and :class:`Middleware`.
+This module implements the central WSGI :class:`Application` object.
 
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
@@ -107,7 +107,6 @@ class Application(object):
     """
     __metaclass__ = ApplicationType
 
-
     def __init__(self):
 
         self.debug = settings.DEBUG
@@ -118,13 +117,8 @@ class Application(object):
         # Initialize the object pool
         pool.load()
 
-        #: list of all the registered middlewares
-        self.middlewares = []
-
-        # register all the settings.MIDDLEWARE_CLASSES
-        for mc in settings.MIDDLEWARE_CLASSES:
-            mc = import_string(mc)
-            self.middlewares.append(mc())
+        #: List of all the registered middlewares (settings.MIDDLEWARE_CLASSES)
+        self.middlewares = [import_string(s)() for s in settings.MIDDLEWARE_CLASSES]
 
         # static data middleware
         paths = pool.get_static_paths()
@@ -236,6 +230,13 @@ class Application(object):
     def request_context(self, environ):
         """Create request context from the given environ. This must be used with
         the ``with`` statement as the context is bould to the current context.
+
+        For example::
+
+            with app.request_context():
+                do_something_with(request)
+
+        :param environ: the wsgi environment to be used to create request.
         """
         req = Request(environ)
         ctx = RequestContext(self, req)
@@ -286,5 +287,4 @@ def simple_server(host='127.0.0.1', port=8080, use_reloader=False):
     from werkzeug import run_simple
     # create a wsgi application
     app = Application()
-    app.debug = debug = settings.DEBUG
-    run_simple(host, port, app, use_reloader=use_reloader, use_debugger=debug)
+    run_simple(host, port, app, use_reloader=use_reloader, use_debugger=app.debug)

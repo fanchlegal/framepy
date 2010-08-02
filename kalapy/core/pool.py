@@ -1,5 +1,5 @@
 """
-kalapy.pool.pool
+kalapy.core.pool
 ~~~~~~~~~~~~~~~~
 
 This module implements object pool that caches package instances and resources
@@ -72,7 +72,8 @@ class Pool(object):
         self.__dict__ = self.__shared_state
 
     def load_modules(self, package, name):
-
+        """Load the module/submodules of the given package by given name.
+        """
         modules = tuple(find_modules(package, include_packages=True))
         fullname = '%s.%s' % (package, name)
 
