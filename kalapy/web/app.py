@@ -259,16 +259,16 @@ class Application(object):
         with self.request_context(environ) as ctx:
             signals.send('request-started')
             try:
-                response = self.get_response(ctx.request)
-            except HTTPException, e:
-                response = e
-            except Exception, e:
-                signals.send('request-exception', error=e)
-                raise
+                try:
+                    response = self.get_response(ctx.request)
+                except HTTPException, e:
+                    response = e
+                except Exception, e:
+                    signals.send('request-exception', error=e)
+                    raise
+                response = self.process_response(request, response)
             finally:
                 signals.send('request-finished')
-
-            response = self.process_response(request, response)
             return response(environ, start_response)
 
     def __call__(self, environ, start_response):
