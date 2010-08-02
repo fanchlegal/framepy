@@ -7,17 +7,26 @@
 </head>
 <body>
 <div class="document">
-    <h1>KalaPy Examples</h1>
-    <div class="navbar">
-        <a href="http://www.kalapy.org/">Project Home</a> |
-        <a href="http://www.kalapy.org/docs/index.html">Documentation</a> |
-        <a href="http://www.kalapy.org/community.html">Community</a>
+    <div class="header">
+        <div class="navbar">
+            <a href="http://www.kalapy.org/">Project Home</a> |
+            <a href="http://www.kalapy.org/docs/index.html">Documentation</a> |
+            <a href="http://www.kalapy.org/community.html">Community</a>
+        </div>
+        <h1>KalaPy Examples</h1>
     </div>
-    This is the main page of the <i>KalaPy</i> examples.<br>
-    Here is the list of installed <i>application packages</i>.
-    <ul class="entries">
-        <li><a href="{{ url_for('wiki:home') }}">Wiki</a></li>
-    </ul>
+    <div class="content">
+        <p>
+        This is the main page of the <i>KalaPy</i> examples.<br>
+        Here is the list of installed <i>application packages</i>.
+        </p>
+        <ul class="entries">
+            <li><a href="{{ url_for('wiki:home') }}">Wiki</a></li>
+        </ul>
+    </div>
+    <div class="footer">
+        &copy; 2010 Amit Mendapara.
+    </div>
 </div>
 </body>
 </html>

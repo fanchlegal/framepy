@@ -1,33 +1,11 @@
 body {
-    font-family: 'Georgia', serif;
+    font-family: 'Droid Sans', 'Lucida Sans', 'Trebuchet MS', sans-serif;
     background: #111;
+    font-size: 1em;
 }
 
-a, h1, h2 {
+a {
     color: #377BA8;
-}
-
-h1, h2 {
-    margin: 0;
-}
-
-h1 {
-    border-bottom: 2px solid #eee;
-}
-
-.document {
-    margin: 2em auto;
-    width: 35em;
-    border: 8px solid #6BA81E;
-    padding: 0.8em;
-    background: white;
-}
-
-.navbar {
-    text-align: right;
-    font-size: 0.9em;
-    padding: 0.3em;
-    margin-bottom: 1em;
 }
 
 a {
@@ -38,3 +16,52 @@ a:hover {
     border-bottom: 1px solid #eee;
 }
 
+h1, h2 {
+    margin: 0;
+}
+
+.document {
+    margin: 2em auto;
+    width: 45em;
+    border: 1px solid #6BA81E;
+    background: white;
+
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.header,
+.footer {
+    background: #6BA81E;
+    color: white;
+    text-shadow: #666 1px 1px 0px;
+}
+
+.header h1 {
+    font-size: 1.7em;
+    margin: 0;
+    padding: 0.4em;
+}
+
+.navbar {
+    float: right;
+    margin-top: 1.3em;
+    margin-right: 1em;
+    font-size: small;
+    font-weight: bold;
+}
+
+.navbar a {
+    color: white;
+}
+
+.content {
+    padding: 1em;
+}
+
+.footer {
+    font-size: small;
+    padding: 2px;
+    text-align: right;
+}
