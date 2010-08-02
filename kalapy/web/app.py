@@ -8,10 +8,12 @@ This module implements WSGI :class:`Application` and :class:`Middleware`.
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
+from __future__ import with_statement
+
 import os
 
 from jinja2.loaders import PrefixLoader, FileSystemLoader
-from werkzeug import ClosingIterator, SharedDataMiddleware, import_string
+from werkzeug import SharedDataMiddleware, import_string
 from werkzeug.exceptions import HTTPException
 from werkzeug.routing import Rule, Map
 
@@ -21,7 +23,7 @@ from kalapy.core.pool import pool
 from kalapy.core.logging import init_logger
 
 from kalapy.web.helpers import url_for
-from kalapy.web.local import _local, _local_manager, request
+from kalapy.web.local import RequestContext, request
 from kalapy.web.templating import JinjaEnvironment
 from kalapy.web.wrappers import Request, Response
 
@@ -210,7 +212,7 @@ class Application(object):
             return Response(value)
         if isinstance(value, tuple):
             return Response(*value)
-        return Response.force_type(value, _local.request.environ)
+        return Response.force_type(value, request.environ)
 
     def get_response(self, request):
         """Returns an :class:`Response` instance for the given `request` object.
@@ -218,12 +220,11 @@ class Application(object):
         response = self.process_request(request)
         if response is not None:
             return response
-        endpoint, args = request.url_adapter.match()
 
-        request.endpoint = endpoint
-        request.view_args = args
-        request.view_func = func = pool.view_functions[endpoint]
+        if request.routing_exception is not None:
+            raise request.routing_exception
 
+        func, args = request.view_func, request.view_args
         try:
             return self.make_response(func(**args))
         except Exception, e:
@@ -232,30 +233,43 @@ class Application(object):
                 return response
             raise
 
+    def request_context(self, environ):
+        """Create request context from the given environ. This must be used with
+        the ``with`` statement as the context is bould to the current context.
+        """
+        req = Request(environ)
+        ctx = RequestContext(self, req)
+
+        ctx.current_app = self
+        ctx.url_adapter = pool.url_map.bind_to_environ(environ)
+
+        try:
+            req.endpoint, req.view_args = ctx.url_adapter.match()
+            req.view_func = pool.view_functions[req.endpoint]
+        except HTTPException, e:
+            req.routing_exception = e
+
+        return ctx
+
     def dispatch(self, environ, start_response):
         """The actual wsgi application. This is not implemented in `__call__`
         so that wsgi middlewares can be applied without losing a reference to
         the class.
         """
-        _local.request = request = Request(environ)
-        request.current_app = self
-        request.url_adapter = adapter = pool.url_map.bind_to_environ(environ)
+        with self.request_context(environ) as ctx:
+            signals.send('request-started')
+            try:
+                response = self.get_response(ctx.request)
+            except HTTPException, e:
+                response = e
+            except Exception, e:
+                signals.send('request-exception', error=e)
+                raise
+            finally:
+                signals.send('request-finished')
 
-        signals.send('request-started')
-        try:
-            response = self.get_response(request)
-        except HTTPException, e:
-            response = e
-        except Exception, e:
-            signals.send('request-exception', error=e)
-            raise
-        finally:
-            signals.send('request-finished')
-
-        response = self.process_response(request, response)
-
-        return ClosingIterator(response(environ, start_response),
-                [_local_manager.cleanup])
+            response = self.process_response(request, response)
+            return response(environ, start_response)
 
     def __call__(self, environ, start_response):
         return self.dispatch(environ, start_response)

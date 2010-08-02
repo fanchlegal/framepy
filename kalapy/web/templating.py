@@ -10,7 +10,7 @@ Implements templating support using Jinja2.
 """
 from jinja2 import Environment
 
-from kalapy.web.local import request
+from kalapy.web.local import _request_context
 
 
 __all__ = ('render_template',)
@@ -63,6 +63,7 @@ def render_template(template, **context):
     :raises: :class:`TemplateNotFound` or any other exceptions thrown during
              rendering process
     """
+    ctx = _request_context
     if ':' not in template:
-        template = '%s:%s' % (request.package, template)
-    return request.current_app.jinja_env.get_template(template).render(context)
+        template = '%s:%s' % (ctx.request.package, template)
+    return ctx.current_app.jinja_env.get_template(template).render(context)

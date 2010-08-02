@@ -15,7 +15,7 @@ except ImportError:
 
 from werkzeug import redirect
 
-from kalapy.web.local import request
+from kalapy.web.local import _request_context
 from kalapy.web.package import Package
 from kalapy.web.wrappers import Response
 
@@ -107,6 +107,7 @@ def url_for(endpoint, **values):
     :raises: :class:`BuildError`
     """
 
+    ctx = _request_context
     reference = None
     external = values.pop('_external', False)
 
@@ -115,16 +116,16 @@ def url_for(endpoint, **values):
 
     if endpoint == 'static':
         if reference is None:
-            reference = request.package
+            reference = ctx.request.package
     else:
         if endpoint.startswith('.'):
             endpoint = endpoint[1:]
-            reference = request.endpoint.rsplit('.', 1)[0]
+            reference = ctx.request.endpoint.rsplit('.', 1)[0]
         if not reference:
-            reference = request.package
+            reference = ctx.request.package
     if reference:
         endpoint = '%s.%s' % (reference, endpoint)
-    return request.url_adapter.build(endpoint, values, force_external=external)
+    return ctx.url_adapter.build(endpoint, values, force_external=external)
 
 
 def locate(endpoint, **values):

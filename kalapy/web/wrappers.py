@@ -19,8 +19,25 @@ class Request(BaseRequest):
     current package.
     """
 
+    #: The endpoint that matched the request. If an exception happend during
+    #: url match, this will be ``None``.
+    endpoint = None
+
+    #: The view function referenced by the :attr:`endpoint`.
+    view_func = None
+
+    #: A dict of arguments that matched the request. If an exception happend
+    #: during url match, this will be ``None``.
+    view_args = None
+
+    #: The exception raised during url matching else ``None``.
+    #: This is usually a :exc:`~werkzeug.exceptions.NotFound` or similar.
+    routing_exception = None
+
     @property
     def package(self):
+        """The name of the current package.
+        """
         if self.endpoint:
             return self.endpoint.split('.', 1)[0]
 
@@ -30,4 +47,3 @@ class Response(BaseResponse):
     set to `'text/html'`.
     """
     default_mimetype = 'text/html'
-
