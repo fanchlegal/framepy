@@ -23,9 +23,9 @@ and command actions.
 Available Commands
 ------------------
 
-.. describe:: admin.py startpackage <name>
+.. describe:: admin.py package <name>
 
-The ``startpackage`` command can be used to create new package skeleton.
+The ``package`` command can be used to create new package skeleton.
 
 .. describe:: admin.py database <action> [options]
 

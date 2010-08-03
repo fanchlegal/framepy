@@ -24,7 +24,7 @@ Create package
 .. sourcecode:: bash
 
     $ cd hello
-    $ ./admin.py startpackage foo
+    $ ./admin.py package foo
 
 A new application package ``foo`` will be created under the current project
 directory with following contents::

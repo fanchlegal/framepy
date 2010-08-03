@@ -2,8 +2,8 @@
 kalapy.admin.commands.project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module implements `startproject` and `startpackage` commands to
-start a new project or an application package.
+This module implements `project` and `package` commands to new projects
+and packages.
 
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LINCESE for more details.
@@ -75,9 +75,9 @@ def check_name(name):
 
 
 class StartProject(Command):
-    """Create a new KalaPy project.
+    """Create a new project.
     """
-    name = "startproject"
+    name = "project"
     usage = "<project>"
 
     scope = None
@@ -95,10 +95,10 @@ class StartProject(Command):
         copy_helper('project_template', name, {'name': name, 'name_lower': name.lower()})
 
 
-class StartApp(Command):
-    """start a new package
+class StartPackage(Command):
+    """Create a new package.
     """
-    name = "startpackage"
+    name = "package"
     usage = "%name <name>"
 
     def execute(self, options, args):
