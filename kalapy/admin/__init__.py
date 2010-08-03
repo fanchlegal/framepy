@@ -1,8 +1,8 @@
 """
-kalapy.admin.base
-~~~~~~~~~~~~~~~~~
+kalapy.admin
+~~~~~~~~~~~~
 
-This module implemented api to write command line admin scripts.
+This module implements script api to write command line admin scripts.
 
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LINCESE for more details.

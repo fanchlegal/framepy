@@ -39,7 +39,7 @@ javascript = babel.messages.extract:extract_javascript
 """)
 
 class BabelCommand(ActionCommand):
-    """Perform i18n message catalog actions.
+    """Perform i18n message catalog related actions.
     """
 
     name = 'babel'
@@ -80,7 +80,7 @@ class BabelCommand(ActionCommand):
         cmd.run(['', '-q', command] + list(argv))
 
     def action_init(self, options, args):
-        """create new message catalogs from generated POT file
+        """Create new message catalogs from generated POT file.
         """
         for pkg, path, locales in self.locale_info(options, args):
             if not os.path.exists(path):
@@ -94,7 +94,7 @@ class BabelCommand(ActionCommand):
                 self.run_babel('init', '-i', pot, '-d', path, '-l', locale)
 
     def action_extract(self, options, args):
-        """extract messages from source files and generate a POT file
+        """Extract messages from source files and generate a POT file.
         """
         mapping = None
         if options.domain in MAPPINGS:
@@ -118,7 +118,7 @@ class BabelCommand(ActionCommand):
                 os.remove(mapping)
 
     def action_update(self, options, args):
-        """update existing message catalogs from generated POT file
+        """Update existing message catalogs from the generated POT file.
         """
         for pkg, path, locales in self.locale_info(options, args):
             if not os.path.exists(path):
@@ -132,7 +132,7 @@ class BabelCommand(ActionCommand):
                 self.run_babel('update', '-N', '-i', pot, '-o', po, '-l', locale)
 
     def action_compile(self, options, args):
-        """compile message catalogs to MO files
+        """Compile message catalogs to MO files.
         """
         for pkg, path, locales in self.locale_info(options, args):
             if not os.path.exists(path):
@@ -144,4 +144,3 @@ class BabelCommand(ActionCommand):
                 if options.verbose:
                     print 'compiling catelog %r' % po
                 self.run_babel('compile', '-i', po, '-o', mo)
-

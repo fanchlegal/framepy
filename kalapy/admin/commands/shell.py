@@ -15,7 +15,7 @@ from kalapy.admin import Command
 
 
 class ScriptCommand(Command):
-    """Run arbitrary script in the context of current project
+    """Run arbitrary python script in the context of current project.
     """
     name = 'script'
     usage = '%name <FILE>'

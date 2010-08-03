@@ -98,7 +98,7 @@ class DBCommand(ActionCommand):
         return result, pending
 
     def action_info(self, options, packages):
-        """Show the table schema for the given packages
+        """Show the table schema for the given packages.
         """
         if not packages:
             raise self.error('no package name provided.')

@@ -59,4 +59,3 @@ class TestCommand(Command):
         execute_command(['database', 'sync'])
 
         run_tests(args, 2 if options.verbose else 0)
-

@@ -75,7 +75,7 @@ def check_name(name):
 
 
 class StartProject(Command):
-    """Create a new project.
+    """Create a KalaPy project with the given project name in the current directory.
     """
     name = "project"
     usage = "<project>"
@@ -96,7 +96,7 @@ class StartProject(Command):
 
 
 class StartPackage(Command):
-    """Create a new package.
+    """Create a KalaPy package with the given name in the current directory.
     """
     name = "package"
     usage = "%name <name>"
