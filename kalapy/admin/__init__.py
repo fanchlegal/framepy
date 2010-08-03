@@ -397,10 +397,9 @@ class Main(object):
 
         try:
             command = REGISTRY[cmd]
-        except:
-            raise CommandError('no such command %r' % cmd)
-
-        command().run(args)
+            command().run(args)
+        except KeyError:
+            print 'no such command %r' % cmd
 
 
 def setup_environment(settings_mod):
