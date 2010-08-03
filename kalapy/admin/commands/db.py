@@ -52,14 +52,17 @@ class DBCommand(ActionCommand):
         if settings.DATABASE_ENGINE == "dummy":
             raise self.error("DATABASE_ENGINE is not configured.")
 
-        database.connect()
         try:
-            # Initialize the object pool
-            from kalapy.core.pool import pool
-            pool.load()
-            super(DBCommand, self).execute(options, args)
-        finally:
-            database.close()
+            database.connect()
+            try:
+                # Initialize the object pool
+                from kalapy.core.pool import pool
+                pool.load()
+                super(DBCommand, self).execute(options, args)
+            finally:
+                database.close()
+        except db.DatabaseError, e:
+            self.error(e)
 
     def get_models(self, *packages):
         """Similar to `db.get_models` but returns a tuple, (list of models,
