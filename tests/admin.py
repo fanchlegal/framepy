@@ -1,17 +1,22 @@
 #!/usr/bin/env python
 import os, sys
+from os.path import dirname, abspath
 
 # make kalapy namespace avialable
 sys.path.append(os.path.abspath(os.path.pardir))
 
 from kalapy import admin
+
+
+if abspath(os.curdir) != abspath(dirname(__file__)):
+    print "Error: The admin script should be run from the project dir."
+    sys.exit(1)
+
 try:
     import settings
 except ImportError:
-    import sys
-    sys.stderr.write("Error: Can't find 'settings.py`. It seems that you are running admin util from outside the project dir.")
+    print "Error: Can't find 'settings.py'"
     sys.exit(1)
 
 if __name__ == "__main__":
     admin.execute_command(None, settings)
-
