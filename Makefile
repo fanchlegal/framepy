@@ -1,4 +1,4 @@
-.PHONY: all release clean docs
+.PHONY: all release clean docs babel-all babel-new
 
 all: clean
 
@@ -17,3 +17,10 @@ clean:
 docs:
 	$(MAKE) -C docs html
 
+babel-all:
+	@python setup.py extract_messages
+	@python setup.py update_catalog
+	@python setup.py compile_catalog
+
+babel-new:
+	@python setup.py init_catalog -l $(LANG)
