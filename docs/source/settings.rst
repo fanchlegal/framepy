@@ -167,6 +167,29 @@ Default::
 Settings for logging. The ``level`` can be one of ``'INFO'``, ``'DEBUG'`` or
 ``'ERROR'``. If ``logfile`` is not provided, `stderr` will be assumed.
 
+
+STATIC_LINKS
+++++++++++++
+
+Default::
+
+    STATIC_LINKS = {
+        '/favicon.ico': 'static/favicon.ico',
+        '/robots.txt': 'static/robots.txt',
+    }
+
+Override the static links. Useful to provide favicon.ico or robots.txt. You can
+also provide static directory links to override original static dirs. Paths should
+be absolute path or relative to the project directory. For example::
+
+    STATIC_LINKS = {
+        '/static': '/path/to/alternative/static/dir',
+        '/favicon.ico': 'static/favicon.ico',
+        '/foo/static': ('/path/to/foo/static1', '/path/to/foo/static2'),
+    }
+
+If you want fallback directories, list them in tuple.
+
 INSTALLED_PACKAGES
 ++++++++++++++++++
 
