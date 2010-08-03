@@ -8,12 +8,6 @@ from setuptools import setup, find_packages
 try:
     from babel.messages import frontend as babel
     setup_args = dict(
-        cmdclasses={
-            'compile_catalog': babel.compile_catalog,
-            'extract_messages': babel.extract_messages,
-            'init_catalog': babel.init_catalog,
-            'update_catalog': babel.update_catalog
-        },
         message_extractors={
             'kalapy': [
                 ('**.py', 'python', None),
@@ -24,8 +18,6 @@ except ImportError:
 
 # import release meta data (version, author etc.)
 execfile(os.path.join("kalapy", "release.py"))
-
-packages = find_packages(exclude=['tests', 'tests.*', 'example', 'example.*'])
 
 setup(
     name='KalaPy',
@@ -57,9 +49,8 @@ setup(
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    packages=packages,
+    packages=find_packages(),
     include_package_data=True,
     scripts=['bin/kalapy-quickstart.py'],
     **setup_args
 )
-
