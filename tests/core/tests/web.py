@@ -73,6 +73,10 @@ class CoreTest(TestCase):
             rv = self.client.get(static_file)
             assert rv.status_code == 200
             assert rv.data.strip() == '<h1>Hello World!</h1>'
+            rv = self.client.get('/favicon.ico')
+            assert rv.status_code == 200
+            rv = self.client.get('/robots.txt')
+            assert rv.status_code == 200
 
 
 class JSONTest(TestCase):

@@ -36,5 +36,10 @@ LOGGING = {
     'logfile': None,
 }
 
+STATIC_LINKS = {
+    '/favicon.ico': 'static/favicon.ico',
+    '/robots.txt': 'static/robots.txt',
+}
+
 INSTALLED_PACKAGES = (
 )

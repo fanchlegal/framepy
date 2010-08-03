@@ -89,6 +89,26 @@ class StaticMiddleware(SharedDataMiddleware):
             return None, None
         return loader
 
+    @classmethod
+    def from_paths(cls, app, *mappings):
+        """A class method to create static middleware from the given mappings.
+        """
+        assert len(mappings) > 0, 'atleast one mapping required'
+
+        paths = dict()
+        map(paths.update, mappings)
+
+        def expand_paths(val):
+            if isinstance(val, basestring):
+                if not os.path.isabs(val):
+                    return os.path.join(settings.PROJECT_DIR, val)
+                return val
+            if isinstance(val, (list, tuple)):
+                return tuple(map(expand_paths, val))
+            return val
+
+        return cls(app, dict([(k, expand_paths(v)) for k,v in paths.items()]))
+
 
 class ApplicationType(type):
     """A metaclass to ensure singleton Application instance.
@@ -121,14 +141,13 @@ class Application(object):
         self.middlewares = [import_string(s)() for s in settings.MIDDLEWARE_CLASSES]
 
         # static data middleware
-        paths = pool.get_static_paths()
-        paths['/static'] = (os.path.join(settings.PROJECT_DIR, 'static'),)
+        self.dispatch = StaticMiddleware.from_paths(self.dispatch, {
+                '/static': os.path.join(settings.PROJECT_DIR, 'static'),
+            }, pool.get_static_paths(), settings.STATIC_LINKS)
 
         pool.url_map.add(
             Rule('/static/<filename>',
                 endpoint='static', methods=('GET',), build_only=True))
-
-        self.dispatch = StaticMiddleware(self.dispatch, paths)
 
         # create jinja env
         self.jinja_env = self._create_jinja_env(pool.get_template_paths())

@@ -11,12 +11,12 @@ DEBUG = True
 
 # Database backend engine
 # Possible value can be either sqlite3, postgresql, mysql, gae
-DATABASE_ENGINE = "sqlite3"
+DATABASE_ENGINE = "postgresql"
 
 # Database name
 # For sqlite3 use path to the sqlite3 database file
 # For gae keep empty
-DATABASE_NAME = "example.db"
+DATABASE_NAME = "example"
 
 # Database user (must have rights to create database tables)
 # Keep empty for sqlite3 and gae
@@ -73,6 +73,23 @@ LOGGING = {
     'level': 'DEBUG',
     'format': '[%(asctime)s] %(levelname)s:%(name)s:%(message)s',
     'logfile': None,
+}
+
+# Some static links. Useful to provide favicon.ico or robots.txt. You can
+# also provide static directory links to override original static dirs. Paths
+# should be absolute path or relative to the project directory.
+#
+# For example::
+#
+#    STATIC_LINKS = {
+#        '/static': '/path/to/alternative/static/dir',
+#        '/favicon.ico': 'static/favicon.ico',
+#        '/foo/static': ('/path/to/foo/static1', '/path/to/foo/static2'),
+#    }
+#
+STATIC_LINKS = {
+    '/favicon.ico': 'static/favicon.ico',
+    '/robots.txt': 'static/robots.txt',
 }
 
 # List of installed packages
