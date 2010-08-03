@@ -188,7 +188,7 @@ be absolute path or relative to the project directory. For example::
         '/foo/static': ('/path/to/foo/static1', '/path/to/foo/static2'),
     }
 
-If you want fallback directories, list them in tuple.
+If you want to specify fallback directories, list them in tuple.
 
 INSTALLED_PACKAGES
 ++++++++++++++++++

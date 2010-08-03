@@ -76,8 +76,9 @@ LOGGING = {
 }
 
 # Some static links. Useful to provide favicon.ico or robots.txt. You can
-# also provide static directory links to override original static dirs. Paths
-# should be absolute path or relative to the project directory.
+# also provide static directory links to override original static dirs. The
+# paths should be absolute path or relative to the project directory. If you
+# want to specify fallback directories, list them in tuple.
 #
 # For example::
 #
