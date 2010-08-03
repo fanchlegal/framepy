@@ -46,9 +46,9 @@ class ShellCommand(Command):
 
     def execute(self, options, args):
 
-        # load the packages
-        from kalapy.conf.loader import loader
-        loader.load()
+        # Initialize the object pool
+        from kalapy.core.pool import pool
+        pool.load()
 
         try:
             if options.plain:
