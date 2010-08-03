@@ -63,15 +63,14 @@ def copy_helper(source, target, context):
 def check_name(name):
     """Check whether the name is valid name.
     """
-    pat = re.compile('^[_a-zA-Z]\w*$')
-    if not pat.search(name):
+    if not re.match('^[_a-zA-Z]\w*$', name):
         raise CommandError("Invalid name '%s'" % name)
-
     try:
         __import__(name)
-        raise CommandError('name conflicts with existing python module.')
     except ImportError:
-        pass
+        return name
+    else:
+        raise CommandError('name conflicts with an existing python module.')
 
 
 class StartProject(Command):
@@ -84,11 +83,11 @@ class StartProject(Command):
 
     def execute(self, options, args):
         try:
-            name = args[0]
-        except:
+            name = check_name(args[0])
+        except IndexError:
             self.print_help()
-
-        check_name(name)
+        except CommandError, e:
+            self.error(e)
 
         if options.verbose:
             print "Creating %s..." % name
@@ -103,11 +102,12 @@ class StartPackage(Command):
 
     def execute(self, options, args):
         try:
-            name = args[0]
-        except:
+            name = check_name(args[0])
+        except IndexError:
             self.print_help()
+        except CommandError, e:
+            self.error(e)
 
-        check_name(name)
         if options.verbose:
             print "Creating %s..." % name
         copy_helper('package_template', name, {'name': name})

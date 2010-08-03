@@ -242,6 +242,10 @@ class Command(object):
     def error(self, msg):
         """Print the given error message and exit.
         """
+        if not isinstance(msg, basestring):
+            msg = '%s' % msg
+        if not msg.startswith('Error:'):
+            msg = 'Error: %s' % msg
         print msg
         sys.exit(1)
 
@@ -360,7 +364,7 @@ class Main(object):
         print
         print "available commands:"
         print
-        for name in REGISTRY:
+        for name in sorted(REGISTRY):
             print "  %s" % name
         print
         print 'use "%s help <command>" for more details on a command' % self.prog
@@ -399,7 +403,7 @@ class Main(object):
             command = REGISTRY[cmd]
             command().run(args)
         except KeyError:
-            print 'no such command %r' % cmd
+            print 'Error: No such command %r.' % cmd
 
 
 def setup_environment(settings_mod):
