@@ -5,6 +5,12 @@ import sys
 import logging
 import logging.handlers
 
+try:
+    from pygments.console import ansiformat
+except ImportError:
+    def ansiformat(attr, s):
+        return s
+
 from kalapy.conf import settings
 
 
@@ -13,6 +19,14 @@ LOG_LEVELS = {
     'INFO': logging.INFO,
     'DEBUG': logging.DEBUG,
     'ERROR': logging.ERROR,
+    'CRITICAL': logging.CRITICAL,
+}
+
+COLORS = {
+    'INFO': '*green*',
+    'DEBUG': '*yellow*',
+    'ERROR': '*red*',
+    'CRITICAL': '+red+',
 }
 
 def init_logger():
@@ -41,3 +55,7 @@ def init_logger():
             del logging.getLogger().handlers[:]
             logging.getLogger().addHandler(handler)
             logging.getLogger().setLevel(level)
+    else:
+        for level, attr in COLORS.items():
+            level = LOG_LEVELS[level]
+            logging.addLevelName(level, ansiformat(attr, logging.getLevelName(level)))

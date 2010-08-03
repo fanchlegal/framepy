@@ -11,6 +11,12 @@ import re, os, sys, types, getopt
 
 from werkzeug import find_modules, import_string
 
+try:
+    from pygments.console import ansiformat
+except ImportError:
+    def ansiformat(attr, s):
+        return s
+
 from kalapy import get_version
 
 
@@ -246,7 +252,7 @@ class Command(object):
             msg = '%s' % msg
         if not msg.startswith('Error:'):
             msg = 'Error: %s' % msg
-        print msg
+        print ansiformat('*red*', msg)
         sys.exit(1)
 
     def print_help(self):
@@ -403,7 +409,7 @@ class Main(object):
             command = REGISTRY[cmd]
             command().run(args)
         except KeyError:
-            print 'Error: No such command %r.' % cmd
+            print ansiformat('*red*', 'Error: No such command %r.' % cmd)
 
 
 def setup_environment(settings_mod):
