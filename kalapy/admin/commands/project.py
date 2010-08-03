@@ -12,13 +12,16 @@ import os, sys, re, shutil, string
 
 from kalapy.admin import Command, ActionCommand, CommandError
 
-def copy_template(template, target, context):
 
-    source = os.path.dirname(os.path.dirname(__file__))
-    source = os.path.join(source, template)
+def copy_helper(source, target, context):
+    """Copy source directory to target directory. Expand the templates with
+    the given context.
+    """
+    if not os.path.isabs(source):
+        source = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), source)
 
     names = os.listdir(source)
-
     if names and not os.path.exists(target):
         os.mkdir(target)
 
@@ -26,7 +29,11 @@ def copy_template(template, target, context):
         srcname = os.path.join(source, name)
         dstname = os.path.join(target, name)
 
-        if os.path.isdir(srcname) or srcname[-4:] in ('.pyc', '.pyo'):
+        if os.path.isdir(srcname):
+            copy_helper(srcname, dstname, context)
+            continue
+
+        if srcname[-4:] in ('.pyc', '.pyo'):
             continue
 
         if srcname.endswith('_t'):
@@ -54,6 +61,8 @@ def copy_template(template, target, context):
 
 
 def check_name(name):
+    """Check whether the name is valid name.
+    """
     pat = re.compile('^[_a-zA-Z]\w*$')
     if not pat.search(name):
         raise CommandError("Invalid name '%s'" % name)
@@ -83,7 +92,7 @@ class StartProject(Command):
 
         if options.verbose:
             print "Creating %s..." % name
-        copy_template('project_template', name, {'name': name, 'name_lower': name.lower()})
+        copy_helper('project_template', name, {'name': name, 'name_lower': name.lower()})
 
 
 class StartApp(Command):
@@ -101,7 +110,7 @@ class StartApp(Command):
         check_name(name)
         if options.verbose:
             print "Creating %s..." % name
-        copy_template('package_template', name, {'name': name})
+        copy_helper('package_template', name, {'name': name})
 
         for d in ('static', 'templates',):
             os.mkdir('%s/%s' % (name, d))
@@ -157,7 +166,7 @@ class GAEProject(ActionCommand):
         context = {'appname': name.lower(), 'name': name}
         if not os.path.exists('app.yaml') and options.verbose:
             print "Creating app.yaml..."
-        copy_template('gae_template', os.curdir, context)
+        copy_helper('gae_template', os.curdir, context)
 
         if options.install:
             self.install_libs(options, args)
