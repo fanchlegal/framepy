@@ -60,10 +60,10 @@ def get_locale():
         locale = None
 
     if locale is None:
-        if request:
+        try:
             locale = Locale.parse(request.accept_languages.best, sep='-')
             request.babel_locale = locale
-        else:
+        except:
             locale = Locale.parse(settings.DEFAULT_LOCALE)
     return locale
 
