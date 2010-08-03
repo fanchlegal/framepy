@@ -11,12 +11,12 @@ DEBUG = True
 
 # Database backend engine
 # Possible value can be either sqlite3, postgresql, mysql, gae
-DATABASE_ENGINE = "postgresql"
+DATABASE_ENGINE = "sqlite3"
 
 # Database name
 # For sqlite3 use path to the sqlite3 database file
 # For gae keep empty
-DATABASE_NAME = "example"
+DATABASE_NAME = "example.db"
 
 # Database user (must have rights to create database tables)
 # Keep empty for sqlite3 and gae
