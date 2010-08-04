@@ -22,13 +22,14 @@ MAPPINGS = dict(
 [extractors]
 ignore = babel.messages.extract:extract_nothing
 python = babel.messages.extract:extract_python
-jinja = jinja2.ext.babel_extract
+jinja2 = jinja2.ext.babel_extract
 
 # Extraction from Python source files
 [python: **.py]
 
 # Extraction from Jinja2 HTML templates
-[jinja: **/templates/**.html]
+[jinja2: **/templates/**.html]
+extensions=jinja2.ext.autoescape,jinja2.ext.with_
 """, javascript = """
 [extractors]
 ignore = babel.messages.extract:extract_nothing

@@ -175,6 +175,11 @@ class Application(object):
             from kalapy.i18n.utils import gettext, ngettext
             jinja_env.add_extension('jinja2.ext.i18n')
             jinja_env.install_gettext_callables(gettext, ngettext, newstyle=True)
+            jinja_env.globals.update({
+                '_': gettext,
+                'gettext': gettext,
+                'ngettext': ngettext
+            })
 
         return jinja_env
 
