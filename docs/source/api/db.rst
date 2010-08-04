@@ -34,12 +34,14 @@ You can query your articles using query interface provided, like::
     for article in articles:
         print article.title
 
-The inputs will be validated according to the properties to which it is being
-assigned. That is, a :class:`db.DateTime` property can only be assigned a valid
-``datetime`` value (real python :class:`datetime.datetime`, or string representation
-of ``datetime``).  Beside that you can also validate input by providing a validator
-function while defining a field with `validator` argument or by defining a method
-in the model class with ``validate_`` as prefix. For example::
+The input will be validated according to the properties to which it is being
+assigned. That is, a :class:`DateTime` property can only be assigned a valid
+``datetime`` value (real python :class:`~datetime.datetime`, or string
+representation of ``datetime``).  Beside that you can also validate input by
+providing a validator function while defining a field with `validator` argument
+or by defining a method in the model class with ``validate_`` as prefix.
+
+For example::
 
     def check_terms(value):
         if 'some_dirty_word' in value:
@@ -56,12 +58,12 @@ in the model class with ``validate_`` as prefix. For example::
 
 
 The ``check_terms`` function is associated as a validator for ``text`` field
-while the ``validate_title`` method is explicitly associated with ``title`` field
-as validator.
+while the ``validate_title`` method is explicitly associated with ``title``
+field as validator.
 
 You can also relate models using any of the provided reference fields to
-represent many-to-one, one-to-one, one-to-many or many-to-many relationships
-among them. For example::
+represent `many-to-one`, `one-to-one`, `one-to-many` or `many-to-many`
+relationships among them. For example::
 
     class Comment(db.Model):
         title = db.String(size=100, required=True)
@@ -78,10 +80,10 @@ in the ``Article`` model. Reference properties can be accessed like this::
     for comment in article.comment_set.all().fetch(-1):
         print comment.title
 
-The model class has a special readonly field named ``key`` that defines *primary
-key* of your data model. The datatype of `key` value depends on the underlying
-database engine. For RDBMS, it is generally an integer but for GAE it is a string
-value.
+The model class has a special readonly field named ``key`` that defines
+*primary key* of your data model. The datatype of `key` value depends on
+the underlying database engine. For RDBMS, it is generally an integer but
+for GAE it is a string value.
 
 Model
 -----
@@ -195,7 +197,9 @@ The query string supports following operators:
     ============= ==============================
 
 For convenience, all of the filtering and ordering methods return "self", so
-you can chain method calls like this::
+you can chain method calls like this:
+
+.. sourcecode:: python
 
     users = Query(User).filter('name =', 'some%') \
                        .filter('age >=', 18) \
@@ -210,8 +214,10 @@ This is equivalent to:
         'name' LIKE 'some%' AND 'age' >= 18 AND 'lang' IN ('en', 'hi', 'gu')
     ORDER BY 'country' DESC LIMIT 100
 
-You can see that multiple ``filter`` call results an ``ANDed`` expression. You can
-generate ``ORed`` result using :class:`Q` like this::
+You can see that multiple ``filter`` call results an ``ANDed`` expression. You
+can generate ``ORed`` result using :class:`Q` like this:
+
+.. sourcecode:: python
 
     from kalapy.db import Query, Q
 

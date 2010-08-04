@@ -141,7 +141,7 @@ def disconnect(signal, handler=None):
     signal else disconnect all the handlers of the given signal.
 
     >>> signals.disconnect('onfinish', on_finish_1)
-    >>> signals.dispatcher('onfinish')
+    >>> signals.disconnect('onfinish')
 
     :param signal: name of the signal
     :param handler: a signal handler

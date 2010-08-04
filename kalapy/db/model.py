@@ -185,9 +185,9 @@ class Model(object):
     the database.
 
     Database tables declared as subclasses of :class:`Model` defines table
-    properties as class members of type :class:`db.Field`. So if you want to
-    publish an article with title, text, and publishing date, you would do it
-    like this::
+    properties as class members of type :class:`Field`. So if you want to
+    publish an article with title, text, and publishing date, you would do
+    it like this::
 
         class Article(db.Model):
             title = db.String(size=100, required=True)

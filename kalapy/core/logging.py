@@ -1,3 +1,12 @@
+"""
+kalapy.core.logging
+~~~~~~~~~~~~~~~~~~~
+
+This module implements logging support.
+
+:copyright: (c) 2010 Amit Mendapara.
+:license: BSD, see LICENSE for more details.
+"""
 from __future__ import absolute_import
 
 import os
