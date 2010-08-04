@@ -17,6 +17,8 @@ __all__ = ('Request', 'Response',)
 class Request(BaseRequest):
     """The request object, remembers the matched endpoint, view arguments and
     current package.
+
+    .. seealso:: :class:`werkzeug.Request`
     """
 
     #: The endpoint that matched the request. If an exception happend during
@@ -45,5 +47,7 @@ class Request(BaseRequest):
 class Response(BaseResponse):
     """The response object that is used by default, with default mimetype
     set to `'text/html'`.
+
+    .. seealso:: :class:`werkzeug.Response`
     """
     default_mimetype = 'text/html'

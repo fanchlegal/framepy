@@ -36,5 +36,6 @@ API Reference
    api/db
    api/web
    api/i18n
+   api/signals
    api/utils
    api/admin

@@ -1,5 +1,5 @@
-Admin Commands
-==============
+Admin
+=====
 
 The admin API allows to write commands for the KalaPy admin scripts. Currently,
 KalaPy doesn't allow you to write custom command in your project but provides a
@@ -17,5 +17,3 @@ KalaPy doesn't allow you to write custom command in your project but provides a
     :members:
 
 .. autofunction:: execute_command
-
-

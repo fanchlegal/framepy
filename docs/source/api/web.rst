@@ -1,35 +1,40 @@
 Web Components
 ==============
 
+This chapter will provide api documentation of the web components of the KalaPy
+framework.
+
 .. automodule:: kalapy.web
     :members:
-
 
 Request
 -------
 
 .. autoclass:: Request
     :members:
-    :inherited-members:
 
 Response
 --------
 
 .. autoclass:: Request
     :members:
-    :inherited-members:
 
-
-Packages & Application
-----------------------
-
-.. autoclass:: Package
-    :members:
+Application
+-----------
 
 .. autoclass:: Application
     :members:
 
+Middleware
+----------
+
 .. autoclass:: Middleware
+    :members:
+
+Package
+-------
+
+.. autoclass:: Package
     :members:
 
 Routing
@@ -47,6 +52,14 @@ Templates
 .. autofunction:: render_template
 
 
+Request Context
+---------------
+
+.. data:: request
+
+    The request instance of the current request context.
+
+
 Other Useful Functions & Classes
 --------------------------------
 
@@ -62,8 +75,3 @@ Other Useful Functions & Classes
 
 .. autoclass:: SecureCookie
     :members:
-
-Configuration
--------------
-
-todo

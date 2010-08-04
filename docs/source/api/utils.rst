@@ -1,16 +1,7 @@
 Utilities
-==========
+=========
 
-This section will document utility functions and classes provided in KalaPy.
-
-Containers
-----------
+This section will document utility functions and classes provided with KalaPy.
 
 .. automodule:: kalapy.utils.containers
-    :members:
-
-Signals
--------
-
-.. automodule:: kalapy.utils.signals
     :members:

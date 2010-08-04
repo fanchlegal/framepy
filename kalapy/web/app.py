@@ -129,6 +129,7 @@ class Application(object):
 
     def __init__(self):
 
+        #: If application is runing in debug mode.
         self.debug = settings.DEBUG
 
         # Initialize logging.
@@ -149,7 +150,7 @@ class Application(object):
             Rule('/static/<filename>',
                 endpoint='static', methods=('GET',), build_only=True))
 
-        # create jinja env
+        #: The jinja2 environment
         self.jinja_env = self._create_jinja_env(pool.get_template_paths())
 
     def _create_jinja_env(self, paths):
