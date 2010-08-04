@@ -3,6 +3,33 @@ KalaPy Changelog
 
 Here you can see the full list of changes between each KalaPy release.
 
+Version 0.4
+-----------
+
+To be released
+
+New features
+    - Added settings.STATIC_LINKS to override static dirs & links
+    - Implemented addon package feature.
+    - Implemented logging support.
+    - Integrated ipython support (shell command).
+    - Added `wiki_extended` example package.
+
+Refactoring
+    - The web module is splited into several smaller modules.
+    - Application class is no longer Package subclass
+    - ModelCache and Loader have been merged into an object Pool
+    - Reimplemented context locals
+    - Improved admin commands (help, colorize output, error handling)
+    - Lots of new tests
+    - Improved documentation
+
+Bugs fixings
+    - Fixed early sending of signal `request-finished`.
+    - Improved signals api.
+    - Fixed GAE issue (sys.path reset, while using `gae runserver`).
+    - Fixed a regression (db.String validation).
+
 Version 0.3.1
 -------------
 

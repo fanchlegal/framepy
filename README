@@ -2,18 +2,16 @@
 KalaPy
 ===============================================================================
 
-KalaPy is a web application framework for Python providing it’s own Database
-Abstraction Layer, web components based on Werkzeug, templating using powerful
-Jinja2 template engine and full internationalization support via Babel and pytz
-and more...
+KalaPy is a web application framework for Python providing it's own Database
+Abstraction Layer, web components based on Werkzeug, templating using Jinja2
+template engine and full internationalization support via Babel and pytz and
+much more...
 
 The development is still under alpha stage and API might change during this
 period. I welcome your useful suggestions/thoughts about how to improve it and
 how it should look like.
 
-At the moment it looks some what similar to Django, but it is only so to get
-started quickly. The intention is to implement a framework that combines power
-of OpenObject and Django. Let’s see how it goes...
+Visit the project website http://www.kalapy.org/ for more information.
 
 -------------------------------------------------------------------------------
 TODO
@@ -22,11 +20,6 @@ TODO
 * Write more unit tests
 * Improve documentation
 * Support for OpenERP
-* Packages (modular design)
-    - Per package settings file
-    - Support for extending an existing package with addon packages
-    - Resources provided by an addon package should get preference over
-      original package
 * Widget framework
     - Form generation and validation
     - Generic view generation (non-form widgets)
