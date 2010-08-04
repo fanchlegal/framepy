@@ -1,5 +1,3 @@
-.. _webapi:
-
 Web Components
 ==============
 
@@ -58,15 +56,14 @@ Other Useful Functions & Classes
 
 .. autoclass:: HTTPException
     :members:
-    
+
 .. autoclass:: NotFound
     :members:
-    
+
 .. autoclass:: SecureCookie
     :members:
-    
+
 Configuration
 -------------
 
 todo
-

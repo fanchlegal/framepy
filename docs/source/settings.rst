@@ -7,6 +7,9 @@ settings file is just a normal Python module with module-level variables.
 There are two kind of settings file, `project settings` located in the top-level
 project directory and `package settings` located in the package directory.
 
+
+.. _project-settings:
+
 Project Settings
 ----------------
 
@@ -201,6 +204,7 @@ Default::
 
 List of installed packages.
 
+.. _package-settings:
 
 Package Settings
 ----------------

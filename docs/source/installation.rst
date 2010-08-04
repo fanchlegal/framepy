@@ -1,5 +1,3 @@
-.. _installation:
-
 Installation
 ============
 
@@ -33,24 +31,24 @@ Follow this link more information on `virtualenv`_.
 I assume you are using *ubuntu* (mine is ubuntu lucid with python 2.6).
 Issue following commands if you haven't installed virtualenv package yet.
 
-.. sourcecode:: bash
+.. sourcecode:: text
 
     $ sudo apt-get install python-virtualenv
-    
+
 Now create your virtualenv directory, like:
 
-.. sourcecode:: bash
+.. sourcecode:: text
 
     $ virtualenv /path/to/your/env
     New python executable in env/bin/python
     Installing setuptools............done.
-    
+
 Now, you should activate it, whenever you work with it.
 
-.. sourcecode:: bash
+.. sourcecode:: text
 
     $ . env/bin/activate
-    
+
 Now you can just enter the following command to get KalaPy installed in
 your virtualenv::
 
@@ -59,12 +57,12 @@ your virtualenv::
 After installed, type following command to see whether it is properly installed
 or not:
 
-.. sourcecode:: bash
+.. sourcecode:: text
 
     $ kalapy-quickstart.py
     Usage: kalapy-quickstart.py <project>
 
-    Create a new KalaPy project.
+    Create a KalaPy project with the given project name in the current directory.
 
     options:
 
@@ -79,14 +77,13 @@ System Wide Installation
 This is not recommended, as KalaPy is still unstable, under heavy development
 and not tested well.
 
-.. sourcecode:: bash
+.. sourcecode:: text
 
     $ sudo easy_install KalaPy
 
 
-Playing with Source
--------------------
+Playing with the Source
+-----------------------
 
 *KalaPy* is an open source project released under BSD license. You can grab
 the latest sources from `github.com <http://github.com/cristatus/KalaPy>`_.
-

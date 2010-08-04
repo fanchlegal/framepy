@@ -1,5 +1,3 @@
-.. _i18n:
-
 Internationalization and Localization
 =====================================
 
@@ -45,10 +43,10 @@ translated. The developers have to mark translatable strings using several
 Standard Translations
 +++++++++++++++++++++
 
-You can specify a translation with function ``kalapy.i18n.gettext`` which is
-aliased to ``_()`` for convention. The alias ``_()`` is installed as a
-``__builtins__`` so that you can directly use ``_()`` in your code without
-importing them.
+You can specify a translation with function :func:`kalapy.i18n.gettext` which is
+aliased to ``\_()`` for convention. The alias ``\_()`` is installed as a
+``\__builtins__`` so that you can directly use ``\_()`` in your code without
+importing it in your module.
 
 Here is an example of translating a python module::
 
@@ -78,7 +76,7 @@ For more information, see `Jinja2 documentation`_.
 Pluralization
 +++++++++++++
 
-You can specify pluralized messages with function ``kalapy.i18n.ngettext``.
+You can specify pluralized messages with function :func:`kalapy.i18n.ngettext`.
 
 This function does a plural-forms lookup of a given string depending on the ``num``
 parameter and uses ``plural`` instead of ``string`` if ``num`` represents plural in
@@ -102,12 +100,12 @@ but if ``num`` is either `0` or `1`, it returns ``'1 Apple'``.
 Translating JavaScript
 ++++++++++++++++++++++
 
-todo
+TODO
 
 Using translations with JavaScript
 ++++++++++++++++++++++++++++++++++
 
-todo
+TODO
 
 Localization
 ------------
@@ -128,15 +126,13 @@ language.
 KalaPy uses `Babel`_ command line interface to generate message files. The files
 when translated should be compiled in `.mo` format in order to use the new translations.
 
-This can be done with the ``admin.py`` script generated in your project directory.
-Type following command on your terminal to see help on catalog related commands.
+This can be done with the ``admin.py`` script. Type following command on your
+terminal to see help on catalog related commands::
 
-::
+    $ ./admin.py babel -h
+    Usage: admin.py babel <action> [options] [package [package [...]]]
 
-    $ ./admin.py help babel
-    admin.py babel <action> [options] [package [package [...]]]
-
-    Perform i18n message catalog actions.
+    Perform i18n message catalog related actions.
 
     options:
 
@@ -147,10 +143,10 @@ Type following command on your terminal to see help on catalog related commands.
 
     available actions:
 
-      compile  compile message catalogs to MO files
-      extract  extract messages from source files and generate a POT file
-      init     create new message catalogs from generated POT file
-      update   update existing message catalogs from generated POT file
+      compile  Compile message catalogs to MO files.
+      extract  Extract messages from source files and generate a POT file.
+      init     Create new message catalogs from generated POT file.
+      update   Update existing message catalogs from the generated POT file.
 
 This actions provided by ``admin.py babel`` command is identical to the ``pybabel``
 script that comes with `Babel`_.
@@ -230,5 +226,4 @@ KalaPy provides several functions to format numbers, decimals and date values to
 locale specific formats. It also provides few functions to parse localized numbers,
 decimal and date values.
 
-See :ref:`API documentation <api/i18n>` for more information.
-
+See :doc:`api/i18n` for more information.

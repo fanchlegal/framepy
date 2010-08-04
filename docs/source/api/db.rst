@@ -1,5 +1,3 @@
-.. _dal:
-
 .. currentmodule:: kalapy.db
 
 Database Abstraction Layer
@@ -238,4 +236,3 @@ Proceed with the :class:`Query` documentation for more details...
 
 .. autoclass:: Query
     :members:
-
