@@ -9,7 +9,7 @@ Implements :class:`Request` and :class:`Response`.
 :license: BSD, see LICENSE for more details.
 """
 from werkzeug import Request as BaseRequest, Response as BaseResponse
-
+from kalapy.core.pool import pool
 
 __all__ = ('Request', 'Response',)
 
@@ -41,7 +41,7 @@ class Request(BaseRequest):
         """The name of the current package.
         """
         if self.endpoint:
-            return self.endpoint.split('.', 1)[0]
+            return pool.get_package(self.endpoint).package.name
 
 
 class Response(BaseResponse):

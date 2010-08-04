@@ -81,5 +81,6 @@ INSTALLED_PACKAGES = (
     'kalapy.contrib.sessions',
     'core',
     'foo',
+    'foo_extended',
     'bar',
 )

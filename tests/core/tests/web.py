@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 
+from kalapy import db
 from kalapy import web
 from kalapy.conf import settings
 from kalapy.test import TestCase
@@ -111,14 +112,39 @@ class MiddlewareTest(TestCase):
 class PackageTest(TestCase):
 
     def test_package_resolution(self):
-        assert self.client.get('/foo/foo').data == \
-"""/foo/foo/static/foo.js
-/bar/bar/static/bar.js
-/foo/foo
-/bar/bar"""
-
         assert self.client.get('/bar/bar').data == \
 """/bar/bar/static/foo.js
 /foo/foo/static/bar.js
 /bar/bar
 /foo/foo"""
+
+    def test_extends_template(self):
+        assert self.client.get('/foo/foo').data == \
+"""/foo/foo/static/foo.js
+/bar/bar/static/bar.js
+/foo/foo
+/bar/bar
+/foo/fox
+/foo/fox"""
+
+    def test_extends_static(self):
+        rv = self.client.get('/foo/foo/static/foo.js').data
+        self.assertEqual(rv, "var FOO = 'fox'\n")
+
+    def test_extends_models(self):
+        m = db.get_model('foo:foo')
+        self.assertEqual(m.__module__, "foo_extended.models")
+        self.assertEqual(m._meta.package, "foo")
+        m = db.get_model('foo:fox')
+        self.assertEqual(m.__module__, "foo_extended.models")
+        self.assertEqual(m._meta.package, "foo")
+
+    def test_extends_views(self):
+        with self.request_context():
+            self.assertEqual(web.url_for('foo:fox'), "/foo/fox")
+
+        with self.request_context('/foo/fox'):
+            self.assertEqual(web.url_for('foox'), '/foo/foox')
+            self.assertEqual(web.url_for('.fox'), '/foo/fox')
+            self.assertEqual(web.url_for('foo:foo'), '/foo/foo')
+            self.assertEqual(web.url_for('foo'), '/foo/foo')
