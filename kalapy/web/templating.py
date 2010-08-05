@@ -27,33 +27,12 @@ class JinjaEnvironment(Environment):
 
 
 def render_template(template, **context):
-    """Render the template from the `templates` folder of the current package
-    with the given context.
+    """Render the template of the current package with the given context.
 
-    If you want to refer to a template from another package, prefix the name
-    with that package name like `package:template`. Also, if you wish to refer
-    to a template from the global template dir just prefix it with `:`.
-
-    Here are few examples:
-
-    =============== ===================== ==============================
-    Active Package  Template Name         Terget Template
-    =============== ===================== ==============================
-    `blog`          ``'index.html'``      '/blog/templates/index.html'
-    `wiki`          ``'index.html'``      '/wiki/templates/index.html'
-    `any`           ``'blog:index.html``  '/blog/templates/index.html'
-    `any`           ``':index.html``      '/templates/index.html'
-    =============== ===================== ==============================
-
-    Same rule applies to the `extends` and `inculde` templates directives.
-
-    .. note::
-
-        If you refer a template from another package, all the `extends`,
-        `include` and `import` statements will be resolved with current
-        package's template loader if the template names are not prefixed
-        appropriately. Same is true for `url_for` used within the referenced
-        template
+    The template loader will try to load the template from the `templates`
+    folder of the current package. If there are any addon packages activated
+    for the current package, the loader will give prefences to the `templates`
+    provided with the addon packages.
 
     :param template: the name of the template to be rendered.
     :param context: the variables that should be available in the context
@@ -64,6 +43,5 @@ def render_template(template, **context):
              rendering process
     """
     ctx = _request_context
-    if ':' not in template:
-        template = '%s:%s' % (ctx.request.package, template)
+    template = '%s:%s' % (ctx.request.package, template)
     return ctx.current_app.jinja_env.get_template(template).render(context)

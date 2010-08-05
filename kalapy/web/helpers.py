@@ -57,24 +57,27 @@ def route(rule, **options):
 
 def url_for(endpoint, **values):
     """Generate a URL for the given endpoint with the method provided. The
-    endpoint is relative to current package. If you wish to refers an endpoint
-    from another package prefix it like `package:endpoint` and `module.endpoint`
-    to refer from another module in the same package and `.endpoint` to refer
-    to the function in the same module.
+    endpoint is a name of the view function in the current package defined
+    in the views module. If you want to refer an endpoint from another package,
+    prefix it with package name like ``"package:view_func"``. If your view
+    functions are organized in submodules other then in the views module, the
+    endpoint name should be in ``"module.view_func"`` format. The endpoint
+    prefixed with a ``.`` will be resolved against current module.
 
     Here are few examples:
 
-    =============== =================== ==============================
-    Active Package  Target Endpoint     Target Function
-    =============== =================== ==============================
-    `blog`          ``'index'``         `blog.views.index`
-    `blog`          ``'page.index'``    `blog.views.page.index`
-    `blog`          ``'.edit'``         `blog.views.page.edit`
-    `wiki`          ``'index'``         `wiki.views.index`
-    `blog`          ``'wiki:index'``    `wiki.views.index`
-    `any`           ``'wiki:index'``    `wiki.views.index`
-    `any`           ``'blog:index'``    `blog.views.index`
-    =============== =================== ==============================
+    =============== ======================= ============================
+    Active Package  Target Endpoint         Target Function
+    =============== ======================= ============================
+    `blog`          ``'index'``             `blog.views.index`
+    `blog`          ``'page.index'``        `blog.views.page.index`
+    `blog`          ``'.edit'``             `blog.views.page.edit`
+    `wiki`          ``'index'``             `wiki.views.index`
+    `blog`          ``'wiki:index'``        `wiki.views.index`
+    `any`           ``'wiki:index'``        `wiki.views.index`
+    `any`           ``'blog:index'``        `blog.views.index`
+    `any`           ``'blog:page.index'``   `blog.views.page.index`
+    =============== ======================= ============================
 
     Where `blog.views.index` is defined in `blogs/views/__init__.py` and
     `blog.views.page.index` is defined in `blogs/views/page.py` and so on.
