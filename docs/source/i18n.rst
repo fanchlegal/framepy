@@ -97,6 +97,35 @@ In this example, if number of apples represents plural in current locale, the
 second string will be return. For example, if ``num`` is `2` it returns ``'2 Apples!'``
 but if ``num`` is either `0` or `1`, it returns ``'1 Apple'``.
 
+Translating templates
++++++++++++++++++++++
+
+Translating templates is a real pain, especially when the strings contains some
+dynamically generated markup. For example, consider the following template:
+
+.. sourcecode:: html+jinja
+
+    Click <a href="{{ url_for('some.endpoint') }}">here</a> for more information.
+
+As the embedded url markup is dynamically generated, it is hard to translate the
+entire sentence. Also, translating the sentence into pieces might result in
+wrong translation in some languages. However, *KalaPy* provides special ``gettext``
+and ``ngettext`` functions for templates to solve this:
+
+.. sourcecode:: html+jinja
+
+    {% macro here_link(val) %}
+        <a href="{{ url_for('some.endpoint') }}">{{ val }}</a>
+    {% endmacro %}
+
+    {{ _('Click :here_link:`here` for more information.', here_link=here_link)|safe }}
+
+You can see, rst like construct has been embedded into the string. Now, the
+translator can correctly translate the sentence without loosing the context.
+
+The gettext function ``_()`` will then apply the macro to the translated string
+resulting correct translation.
+
 Translating JavaScript
 ++++++++++++++++++++++
 

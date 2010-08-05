@@ -49,8 +49,11 @@ Routing
 Templates
 ---------
 
-.. autofunction:: render_template
+.. automodule:: kalapy.web.templating
+    :members:
 
+
+.. currentmodule:: kalapy.web
 
 Request Context
 ---------------
@@ -65,7 +68,9 @@ Other Useful Functions & Classes
 
 .. autofunction:: jsonify
 
-.. autofunction:: json
+.. function:: json
+
+    The standard :func:`simplejson.json` function exposed for convenience.
 
 .. autofunction:: abort
 

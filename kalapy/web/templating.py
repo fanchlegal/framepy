@@ -16,8 +16,8 @@ For example, we want to translate following template:
 
     Click <a href="{{ url_for('some.endpoint') }}">here</a> for more information.
 
-As the embeded url markup is dynamically generated, it is hard to translate the
-entite sentence. Also, translating the sentence into pieces might result in
+As the embedded url markup is dynamically generated, it is hard to translate the
+entire sentence. Also, translating the sentence into pieces might result in
 wrong translation in some languages. This can be solved like:
 
 .. sourcecode:: html+jinja
@@ -28,9 +28,8 @@ wrong translation in some languages. This can be solved like:
 
     {{ _('Click :here_link:`here` for more information.', here_link=here_link)|safe }}
 
-You can see, rst like contruct has been embeded into the string. Now, the
-translator can correctly translate the sentence by also translating the
-"`here`" word.
+You can see, rst like construct has been embedded into the string. Now, the
+translator can correctly translate the sentence without loosing the context.
 
 The gettext function ``_()`` will then apply the macro to the translated string
 resulting correct translation.
@@ -79,16 +78,16 @@ def apply_macro(string, **kw):
 
 def gettext(string, **kw):
     """Same as :func:`kalapy.i18n.gettext` but will expand the translated
-    string with macros. Useful to translate strings in jinja template with
-    embeded markup.
+    string with macros. Useful to translate strings in Jinja2 template with
+    embedded markup.
     """
     return apply_macro(get_translations().ugettext(string), **kw)
 
 
 def ngettext(string, plural, num, **kw):
     """Same as :func:`kalapy.i18n.ngettext` but will expand the translated
-    string with macros. Useful to translate strings in jinja template with
-    embeded markup.
+    string with macros. Useful to translate strings in Jinja2 template with
+    embedded markup.
     """
     return apply_macro(
         get_translations().ungettext(string, plural, num), **kw)
