@@ -5,11 +5,44 @@ kalapy.web.templating
 
 Implements templating support using Jinja2.
 
+This module provides :func:`render_template` function that can be used to
+render jinja2 templates. It also provides special version of `gettext` and
+`ngettext` implementation to allow `rst` style syntax to apply jinja2 macro
+to the strings.
+
+For example, we want to translate following template:
+
+.. sourcecode:: html+jinja
+
+    Click <a href="{{ url_for('some.endpoint') }}">here</a> for more information.
+
+As the embeded url markup is dynamically generated, it is hard to translate the
+entite sentence. Also, translating the sentence into pieces might result in
+wrong translation in some languages. This can be solved like:
+
+.. sourcecode:: html+jinja
+
+    {% macro here_link(val) %}
+        <a href="{{ url_for('some.endpoint') }}">{{ val }}</a>
+    {% endmacro %}
+
+    {{ _('Click :here_link:`here` for more information.', here_link=here_link)|safe }}
+
+You can see, rst like contruct has been embeded into the string. Now, the
+translator can correctly translate the sentence by also translating the
+"`here`" word.
+
+The gettext function ``_()`` will then apply the macro to the translated string
+resulting correct translation.
+
 :copyright: (c) 2010 Amit Mendapara.
 :license: BSD, see LICENSE for more details.
 """
+import re
+
 from jinja2 import Environment
 
+from kalapy.i18n.utils import get_translations
 from kalapy.web.local import _request_context
 
 
@@ -24,6 +57,41 @@ class JinjaEnvironment(Environment):
             package = parent.split(':',1)[0]
             return '%s:%s' % (package, template)
         return template
+
+
+__macro_re = re.compile(':(\w+):`(.*?)`')
+
+
+def apply_macro(string, **kw):
+    """Apply a macro to the given string provided through the keywork
+    arguments.
+    """
+    def replace(match):
+        func, val = match.groups()
+        try:
+            func = kw[func]
+        except KeyError:
+            return match.group(0)
+        else:
+            return func(val)
+    return __macro_re.sub(replace, string) % kw
+
+
+def gettext(string, **kw):
+    """Same as :func:`kalapy.i18n.gettext` but will expand the translated
+    string with macros. Useful to translate strings in jinja template with
+    embeded markup.
+    """
+    return apply_macro(get_translations().ugettext(string), **kw)
+
+
+def ngettext(string, plural, num, **kw):
+    """Same as :func:`kalapy.i18n.ngettext` but will expand the translated
+    string with macros. Useful to translate strings in jinja template with
+    embeded markup.
+    """
+    return apply_macro(
+        get_translations().ungettext(string, plural, num), **kw)
 
 
 def render_template(template, **context):

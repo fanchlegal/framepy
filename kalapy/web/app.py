@@ -172,7 +172,7 @@ class Application(object):
             request=request)
 
         if settings.USE_I18N:
-            from kalapy.i18n.utils import gettext, ngettext
+            from kalapy.web.templating import gettext, ngettext
             jinja_env.add_extension('jinja2.ext.i18n')
             jinja_env.install_gettext_callables(gettext, ngettext, newstyle=True)
             jinja_env.globals.update({
