@@ -73,7 +73,7 @@ def apply_macro(string, **kw):
             return match.group(0)
         else:
             return func(val)
-    return __macro_re.sub(replace, string) % kw
+    return string if not kw else __macro_re.sub(replace, string) % kw
 
 
 def gettext(string, **kw):
