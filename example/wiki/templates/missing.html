@@ -1,24 +1,30 @@
 {% extends 'layout.html' %}
 
 {% set hide_navigation = True %}
-{% set title = "Page Not Found" %}
+{% set title = _("Page Not Found") %}
 
 {% block contents %}
-    <p>The page you requested does not exist.</p>
+
+    {% macro edit_link(val) %}
+        <a href="{{ url_for('edit', name=page_name) }}">{{ val }}</a>
+    {% endmacro %}
+
+    <p>{{ _('The page you requested does not exist.') }}</p>
     {% if revision_requested %}
     <p>
-        It also could be that there is no such revision of that page.
+        {{ _('It also could be that there is no such revision of that page.') }}
     </p>
     {% endif %}
     {% if not protected %}
     <p>
-        Feel free to <a href="{{ url_for('edit', name=page_name) }}">create such a page</a>.
+        {{ _('Feel free to :edit_link:`create such a page`.', edit_link=edit_link)|safe }}
     </p>
     {% else %}
     <p>
-        Although this page does not exist by now you cannot create it because
-        the system protected the page name for future use.
+        {{
+        _('Although this page does not exist by now you cannot create '
+          'it because the system protected the page name for future use.')
+        }}
     </p>
     {% endif %}
 {% endblock %}
-

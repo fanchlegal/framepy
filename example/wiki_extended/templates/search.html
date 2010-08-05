@@ -1,18 +1,18 @@
 {% extends 'layout.html' %}
 
 {% set hide_navigation = True %}
-{% set title = 'Search Result' %}
+{% set title = _('Search Result') %}
 
 {% block contents %}
-    <h1>Search Result</h1>
+    <h1>{{ title }}</h1>
     {% if not revisions %}
-        <p>no result</p>
+        <p>{{ _('no result') }}</p>
     {% else %}
         <table class="changes">
           <tr>
-            <th class="timestamp">Date</th>
-            <th class="page">Page</th>
-            <th class="change_note">Change Note</th>
+            <th class="timestamp">{{ _('Date') }}</th>
+            <th class="page">{{ _('Page') }}</th>
+            <th class="change_note">{{ _('Change Note') }}</th>
           </tr>
           {% for entry in revisions %}
           <tr class="{{ loop.cycle('even', 'odd') }}">

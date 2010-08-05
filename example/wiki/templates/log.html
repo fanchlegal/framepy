@@ -1,17 +1,17 @@
 {% extends 'layout.html' %}
 {% set page_action = 'log' %}
-{% set title = 'Revisions for “%s”' % revision.title %}
+{% set title = _('Revisions for “%(revision)s”', revision=revision.title) %}
 {% block contents %}
     <p>
-      In this list you can see all the revisions of the requested page.
+      {{ _('In this list you can see all the revisions of the requested page.') }}
     </p>
     <form action="{{ url_for('diff', name=revision.name) }}" method="get">
       <table class="revisions">
         <tr>
-          <th class="timestamp">Date</th>
-          <th class="change_note">Change Note</th>
-          <th class="diff"><input type="submit" value="Diff" /></th>
-          <th class="actions">Actions</th>
+          <th class="timestamp">{{ _('Date') }}</th>
+          <th class="change_note">{{ _('Change Note') }}</th>
+          <th class="diff"><input type="submit" value="{{ _('Diff') }}" /></th>
+          <th class="actions">{{ _('Actions') }}</th>
         </tr>
         {% for rev in revisions %}
         <tr class="{{ loop.index % 2 == 1 and 'even' or 'odd' }}">
@@ -24,9 +24,9 @@
                 {{ {'checked': 'checked' if loop.index == 1 else None} | xmlattr }}" />
           </td>
           <td class="actions">
-            <a href="{{ url_for('show', name=revision.name, rev=rev.key) }}">show</a>
+            <a href="{{ url_for('show', name=revision.name, rev=rev.key) }}">{{ _('show') }}</a>
             {% if loop.index > 1 %}
-              <a href="{{ url_for('revert', name=revision.name, rev=rev.key) }}">revert</a>
+              <a href="{{ url_for('revert', name=revision.name, rev=rev.key) }}">{{ _('revert') }}</a>
             {% endif %}
           </td>
         </tr>
@@ -34,4 +34,3 @@
       </table>
     </form>
 {% endblock %}
-

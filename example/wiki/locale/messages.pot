@@ -1,0 +1,199 @@
+# Translations template for PROJECT.
+# Copyright (C) 2010 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2010-08-05 16:27+0530\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.5\n"
+
+#: wiki/views.py:53
+msgid "You cannot save empty revisions."
+msgstr ""
+
+#: wiki/views.py:88
+msgid "No revisions specified."
+msgstr ""
+
+#: wiki/views.py:95
+msgid "At least one of the revisions requested does not exist."
+msgstr ""
+
+#: wiki/views.py:128
+msgid "No such revision"
+msgstr ""
+
+#: wiki/views.py:138
+msgid "You tried to revert the current active revision."
+msgstr ""
+
+#: wiki/views.py:141
+msgid ""
+"There are no changes between the current revision and the revision you "
+"want to restore."
+msgstr ""
+
+#: wiki/templates/changes.html:3
+msgid "Recent Changes"
+msgstr ""
+
+#: wiki/templates/changes.html:9 wiki/templates/log.html:11
+msgid "Date"
+msgstr ""
+
+#: wiki/templates/changes.html:10
+msgid "Page"
+msgstr ""
+
+#: wiki/templates/changes.html:11 wiki/templates/log.html:12
+msgid "Change Note"
+msgstr ""
+
+#: wiki/templates/diff.html:3
+msgid "View Diff"
+msgstr ""
+
+#: wiki/templates/diff.html:22
+msgid "Diff for :view_link:`page`"
+msgstr ""
+
+#: wiki/templates/diff.html:24
+msgid ""
+"Below you can see the differences between the revision from "
+":old_link:`old` and the revision from :new_link:`new` in unified diff "
+"format."
+msgstr ""
+
+#: wiki/templates/diff.html:31
+msgid "Cannot Display Diff"
+msgstr ""
+
+#: wiki/templates/edit.html:4
+msgid "Create"
+msgstr ""
+
+#: wiki/templates/edit.html:4
+msgid "Edit"
+msgstr ""
+
+#: wiki/templates/edit.html:5
+msgid "create"
+msgstr ""
+
+#: wiki/templates/edit.html:5
+msgid "modify"
+msgstr ""
+
+#: wiki/templates/edit.html:18
+#, python-format
+msgid ""
+"You can now %(action)s the page contents. To format your text you can use"
+" :rst_link:`reStructuredText`."
+msgstr ""
+
+#: wiki/templates/edit.html:28
+msgid "Save"
+msgstr ""
+
+#: wiki/templates/edit.html:29
+msgid "Cancel"
+msgstr ""
+
+#: wiki/templates/index.html:4
+msgid "Index"
+msgstr ""
+
+#: wiki/templates/layout.html:17
+msgid "Simple Wiki"
+msgstr ""
+
+#: wiki/templates/layout.html:22
+#, python-format
+msgid ":version_link:`This revision` was created on %(time)s."
+msgstr ""
+
+#: wiki/templates/layout.html:29 wiki/templates/log.html:27
+msgid "show"
+msgstr ""
+
+#: wiki/templates/layout.html:30
+msgid "edit"
+msgstr ""
+
+#: wiki/templates/layout.html:31
+msgid "log"
+msgstr ""
+
+#: wiki/templates/layout.html:37
+msgid "main"
+msgstr ""
+
+#: wiki/templates/layout.html:38
+msgid "index"
+msgstr ""
+
+#: wiki/templates/layout.html:39
+msgid "changes"
+msgstr ""
+
+#: wiki/templates/log.html:3
+#, python-format
+msgid "Revisions for “%(revision)s”"
+msgstr ""
+
+#: wiki/templates/log.html:6
+msgid "In this list you can see all the revisions of the requested page."
+msgstr ""
+
+#: wiki/templates/log.html:13
+msgid "Diff"
+msgstr ""
+
+#: wiki/templates/log.html:14
+msgid "Actions"
+msgstr ""
+
+#: wiki/templates/log.html:29
+msgid "revert"
+msgstr ""
+
+#: wiki/templates/macros.html:5 wiki/templates/macros.html:7
+msgid "Previous"
+msgstr ""
+
+#: wiki/templates/macros.html:11 wiki/templates/macros.html:13
+msgid "Next"
+msgstr ""
+
+#: wiki/templates/missing.html:4
+msgid "Page Not Found"
+msgstr ""
+
+#: wiki/templates/missing.html:12
+msgid "The page you requested does not exist."
+msgstr ""
+
+#: wiki/templates/missing.html:15
+msgid "It also could be that there is no such revision of that page."
+msgstr ""
+
+#: wiki/templates/missing.html:20
+msgid "Feel free to :edit_link:`create such a page`."
+msgstr ""
+
+#: wiki/templates/missing.html:25
+msgid ""
+"Although this page does not exist by now you cannot create it because the"
+" system protected the page name for future use."
+msgstr ""
+

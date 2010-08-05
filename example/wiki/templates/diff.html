@@ -1,22 +1,34 @@
 {% extends 'layout.html' %}
 {% set page_action = 'log' %}
-{% set title = 'View Diff' %}
+{% set title = _('View Diff') %}
 
 {% block contents %}
-    {% if not error %}
-    <h1>Diff for “<a href="{{ url_for('show', name=page.name) }}">{{ page.title }}</a>”</h1>
-      <p>
-        Below you can see the differences between the revision from
+
+    {% macro view_link(val) %}
+        “<a href="{{ url_for('show', name=page.name) }}">{{ page.title }}</a>”
+    {% endmacro %}
+
+    {% macro old_link(val) %}
         <a href="{{ url_for('show', name=page.name, rev=old_revision.key) }}"
-        >{{ old_revision.time }}</a> and the
-        revision from <a href="{{ url_for('show', name=page.name, rev=new_revision.key) }}"
-        >{{ new_revision.time }}</a> in unified
-        diff format.
+        >{{ old_revision.time }}</a>
+    {% endmacro %}
+
+    {% macro new_link(val) %}
+        <a href="{{ url_for('show', name=page.name, rev=new_revision.key) }}"
+        >{{ new_revision.time }}</a>
+    {% endmacro %}
+
+    {% if not error %}
+    <h1>{{ _('Diff for :view_link:`page`', view_link=view_link)|safe }}</h1>
+      <p>
+        {{ _('Below you can see the differences between the revision '
+             'from :old_link:`old` and the revision from :new_link:`new` '
+             'in unified diff format.', new_link=new_link, old_link=old_link)|safe
+        }}
       </p>
       <pre class="udiff">{{ diff|join('') }}</pre>
     {% else %}
-      <h1>Cannot Display Diff</h1>
+      <h1>{{ _('Cannot Display Diff') }}</h1>
       <p class="error">{{ error }}</p>
     {% endif %}
 {% endblock %}
-

@@ -1,27 +1,36 @@
 {% extends 'layout.html' %}
 {% set page_action = 'log' %}
-{% set title = 'Revert Old Revision' %}
+{% set title = _('Revert Old Revision') %}
 
 {% block contents %}
-    {% if not error %}
-    <h1>Revert Old Revision of “<a href="{{ url_for('show', name=revision.name) }}"
-    >{{ revision.title }}</a>”</h1>
-      <p>
-        If you want to restore the old revision from
+
+    {% macro old_link(val) %}
         <a href="{{ url_for('show', name=revision.name, rev=old_revision.key) }}"
-        >{{ old_revision.time }}</a> enter your change
-        note and click “Revert”.
+        >{{ old_revision.time }}</a>
+    {% endmacro %}
+
+    {% macro new_link(val) %}
+        “<a href="{{ url_for('show', name=revision.name) }}"
+        >{{ revision.title }}</a>”
+    {% endmacro %}
+
+    {% if not error %}
+    <h1>{{ _('Revert Old Revision of :new_link:`revision`', new_link=new_link|safe) }}</h1>
+      <p>
+      {{
+        _('If you want to restore the old revision from :old_link:`revision` '
+          'enter your change note and click “Revert”.', old_link=old_link)|sage)
+      }}
       </p>
       <form action="" method="post">
         <div class="actions">
           <input type="text" name="note" value="{{ note }}" size="50" />
-          <input type="submit" value="Revert" />
-          <input type="submit" name="cancel" value="Cancel" />
+          <input type="submit" value="{{ _('Revert') }}" />
+          <input type="submit" name="cancel" value="{{ _('Cancel') }}" />
         </div>
       </form>
     {% else %}
-      <h2>Cannot Revert</h2>
+      <h2>{{ _('Cannot Revert') }}</h2>
       <p class="error">{{ error }}</p>
     {% endif %}
 {% endblock %}
-

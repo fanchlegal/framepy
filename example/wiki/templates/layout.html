@@ -7,31 +7,36 @@
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+
+    {% macro version_link(val) %}
+        <a href="{{ url_for('show', name=revision.name, rev=revision.key) }}">{{ val }}</a>
+    {% endmacro %}
+
     <div class="bodywrapper">
         <div class="header">
-            <h1><a href="{{ url_for('home') }}">Simple Wiki</a></h1>
+            <h1><a href="{{ url_for('home') }}">{{ _('Simple Wiki') }}</a></h1>
         </div>
         <div class="contents">
             {% if not hide_navigation and revision.timestamp %}
             <div class="page_meta">
-                <a href="{{ url_for('show', name=revision.name, rev=revision.key) }}">This revision</a>
-                was created on {{ revision.time }}.
+                {{ _(':version_link:`This revision` was created on %(time)s.',
+                        version_link=version_link, time=revision.time) }}
             </div>
             {% endif %}
             <div class="navigation">
             {% if not hide_navigation %}
                 {% for id, href, title in (
-                    ('show', url_for('show', name=revision.name), 'show'),
-                    ('edit', url_for('edit', name=revision.name), 'edit'),
-                    ('log', url_for('log', name=revision.name), 'log')
+                    ('show', url_for('show', name=revision.name), _('show')),
+                    ('edit', url_for('edit', name=revision.name), _('edit')),
+                    ('log', url_for('log', name=revision.name), _('log'))
                 ) %}
                 <a href="{{ href }}" {{ {'class': 'active' if id == page_action else ''}|xmlattr }}
                 >{{ title }}</a> |
                 {% endfor %}
             {% endif %}
-                <a href="{{ url_for('home') }}">main</a> |
-                <a href="{{ url_for('index') }}">index</a> |
-                <a href="{{ url_for('changes') }}">changes</a>
+                <a href="{{ url_for('home') }}">{{ _('main') }}</a> |
+                <a href="{{ url_for('index') }}">{{ _('index') }}</a> |
+                <a href="{{ url_for('changes') }}">{{ _('changes') }}</a>
             </div>
             <div>
             {% block contents %}{% endblock %}
@@ -44,4 +49,3 @@
     </div>
 </body>
 </html>
-

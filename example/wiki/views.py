@@ -50,7 +50,7 @@ def save(name):
         revision and revision.text == text:
         return web.redirect(web.url_for('show', name=name))
     elif not text:
-        error = 'You cannot save empty revisions.'
+        error = _('You cannot save empty revisions.')
     else:
         note = request.form.get('note', '')
         page = revision.page if revision else Page(name=name)
@@ -85,15 +85,15 @@ def diff(name):
     diff = page = old_rev = new_rev = None
 
     if not (old and new):
-        error = 'No revisions specified.'
+        error = _('No revisions specified.')
     else:
         revision = Page.by_name(name)
         revisions = dict([(rev.key, rev) for rev in revision.page.revisions \
             .all().filter('key in', [old, new]).fetch(-1)])
 
         if len(revisions) != 2:
-            error = 'At least one of the revisions requested ' \
-                    'does not exist.'
+            error = _('At least one of the revisions requested ' \
+                      'does not exist.')
         else:
             new_rev = revisions[new]
             old_rev = revisions[old]
@@ -125,7 +125,7 @@ def revert(name):
         pass
 
     old_revision = page = None
-    error = 'No such revision'
+    error = _('No such revision')
 
     if request.method == 'POST' and request.form.get('cancel'):
         return web.redirect(web.url_for('show', name=page_name))
@@ -135,12 +135,12 @@ def revert(name):
         if old_revision:
             new_revision = Page.by_name(name)
             if old_revision == new_revision:
-                error = 'You tried to revert the current active ' \
-                        'revision.'
+                error = _('You tried to revert the current active ' \
+                          'revision.')
             elif old_revision.text == new_revision.text:
-                error = 'There are no changes between the current ' \
-                        'revision and the revision you want to ' \
-                        'restore.'
+                error = _('There are no changes between the current ' \
+                          'revision and the revision you want to ' \
+                          'restore.')
             else:
                 error = ''
                 page = old_revision.page
@@ -172,4 +172,3 @@ def changes():
     query = Revision.all().order('-timestamp')
     return web.render_template('changes.html',
         pagination=Pagination(query, 20, page, 'changes'))
-

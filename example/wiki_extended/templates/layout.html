@@ -10,35 +10,35 @@
     <div class="bodywrapper">
         <div class="header">
             <div class="header-links">
-                <a href="{{ url_for('main:index') }}">Examples</a> |
+                <a href="{{ url_for('main:index') }}">{{ _('Examples') }}</a> |
                 <a href="http://www.kalapy.org/">KalaPy</a> |
-                <a href="http://www.kalapy.org/docs/index.html">Documentation</a>
+                <a href="http://www.kalapy.org/docs/index.html">{{ _('Documentation') }}</a>
             </div>
             <h1>
-                <a href="{{ url_for('home') }}">Simple Wiki</a>
-                <span>Extended version...</span>
+                <a href="{{ url_for('home') }}">{{ _('Simple Wiki') }}</a>
+                <span>{{ _('Extended version...') }}</span>
             </h1>
         </div>
         <div class="contentwrapper">
             <div class="side">
                 <ul id="nav">
                     <li>
-                        <span>Navigation</span>
+                        <span>{{ _('Navigation') }}</span>
                         <ul>
-                            <li><a href="{{ url_for('home') }}">Main Page</a></li>
-                            <li><a href="{{ url_for('changes') }}">Recent Changes</a></li>
-                            <li><a href="{{ url_for('index') }}">Spacial Pages</a></li>
-                            <li><a href="{{ url_for('help') }}">Help</a></li>
+                            <li><a href="{{ url_for('home') }}">{{ _('Main Page') }}</a></li>
+                            <li><a href="{{ url_for('changes') }}">{{ _('Recent Changes') }}</a></li>
+                            <li><a href="{{ url_for('index') }}">{{ _('Spacial Pages') }}</a></li>
+                            <li><a href="{{ url_for('help') }}">{{ _('Help') }}</a></li>
                         </ul>
                     </li>
                     {% if not hide_navigation %}
                     <li>
-                        <span>This Page</span>
+                        <span>{{ _('This Page') }}</span>
                         <ul>
                         {% for id, href, title in (
-                            ('show', url_for('show', name=revision.name), 'Show Page'),
-                            ('edit', url_for('edit', name=revision.name), 'Edit Page'),
-                            ('log', url_for('log', name=revision.name), 'View Log')
+                            ('show', url_for('show', name=revision.name), _('Show Page')),
+                            ('edit', url_for('edit', name=revision.name), _('Edit Page')),
+                            ('log', url_for('log', name=revision.name), _('View Log'))
                         ) %}
                             <li>
                                 <a href="{{ href }}"
@@ -50,20 +50,25 @@
                     </li>
                     {% endif %}
                     <li>
-                        <span>Search</span>
+                        <span>{{ _('Search') }}</span>
                         <form method="GET" action="{{ url_for('search') }}">
                             <input type="text" name="q">
-                            <input type="submit" value="OK">
+                            <input type="submit" value="{{ _('OK') }}">
                         </form>
-                        <p>Enter search terms and press OK.</p>
+                        <p>{{ _('Enter search terms and press OK.') }}</p>
                     </li>
                 </ul>
             </div>
+
+            {% macro version_link(val) %}
+                <a href="{{ url_for('show', name=revision.name, rev=revision.key) }}">{{ val }}</a>
+            {% endmacro %}
+
             <div class="contents">
                 {% if not hide_navigation and revision.timestamp %}
                 <div class="page_meta">
-                    <a href="{{ url_for('show', name=revision.name, rev=revision.key) }}">This revision</a>
-                    was created on {{ revision.time }}.
+                    {{ _(':version_link:`This revision` was created on %(time)s.',
+                        version_link=version_link, time=revision.time)|safe }}
                 </div>
                 {% endif %}
                 <div>
