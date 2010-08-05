@@ -6,7 +6,7 @@ Here you can see the full list of changes between each KalaPy release.
 Version 0.4
 -----------
 
-To be released
+Released on 5th August, 2010.
 
 New features
     - Added settings.STATIC_LINKS to override static dirs & links
@@ -14,6 +14,7 @@ New features
     - Implemented logging support.
     - Integrated ipython support (shell command).
     - Added `wiki_extended` example package.
+    - Translate Jinja2 templates with easy (see docs).
 
 Refactoring
     - The web module is splited into several smaller modules.
