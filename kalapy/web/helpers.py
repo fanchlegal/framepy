@@ -20,7 +20,7 @@ from kalapy.web.package import Package
 from kalapy.web.wrappers import Response
 
 
-__all__ = ('route', 'url_for', 'locate', 'jsonify',)
+__all__ = ('route', 'url_for', 'locate', 'jsonify', 'json')
 
 
 def route(rule, **options):

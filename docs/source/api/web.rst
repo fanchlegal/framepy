@@ -65,6 +65,8 @@ Other Useful Functions & Classes
 
 .. autofunction:: jsonify
 
+.. autofunction:: json
+
 .. autofunction:: abort
 
 .. autoclass:: HTTPException
