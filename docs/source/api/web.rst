@@ -16,7 +16,7 @@ Request
 Response
 --------
 
-.. autoclass:: Request
+.. autoclass:: Response
     :members:
 
 Application
@@ -43,6 +43,8 @@ Routing
 .. autofunction:: route
 
 .. autofunction:: url_for
+
+.. autofunction:: redirect
 
 .. autofunction:: locate
 
@@ -75,10 +77,9 @@ Other Useful Functions & Classes
 .. autofunction:: abort
 
 .. autoclass:: HTTPException
-    :members:
 
 .. autoclass:: NotFound
-    :members:
 
 .. autoclass:: SecureCookie
-    :members:
+
+    See :class:`~werkzeug.contrib.securecookie.SecureCookie` for more information.
