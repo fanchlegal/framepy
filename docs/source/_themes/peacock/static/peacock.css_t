@@ -34,3 +34,7 @@ div.bodywrapper {
 }
 {% endif %}
 
+div.sphinxsidebar input[type="text"] {
+    margin-left: 10px;
+    width: 150px;
+}
