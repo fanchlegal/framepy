@@ -45,7 +45,7 @@ of current project.
 
 .. describe:: admin.py babel <action> [options] [package [package [...]]]
 
-Perform :ref:`i18n <i18n>` message catalog actions.
+Perform :doc:`i18n <i18n>` message catalog actions.
 
 .. describe:: admin.py test [name [name [name [...]]]]
 
@@ -71,4 +71,4 @@ If test names are not given run all the tests of the installed packages.
 
 .. describe:: admin.py gae <action> [options] [args]
 
-Perform :ref:`google appengine <gae>` specific tasks.
+Perform :doc:`google appengine <gae>` specific tasks.
