@@ -151,7 +151,7 @@ class Query(object):
 
         For example::
 
-            q = Query(User).filter('name =', 'some%').filter(age >=', 20)
+            q = Query(User).filter('name =', 'some%').filter('age >=', 20)
             q1 = q.filter('dob >=', '2001-01-01')
             q2 = q.filter('dob <', '2001-01-01')
 
@@ -159,7 +159,7 @@ class Query(object):
 
             from kalapy.db import Query, Q
 
-            q = Query(User).filter(Q('name =', 'some%') | Q(age >=', 20))
+            q = Query(User).filter(Q('name =', 'some%') | Q('age >=', 20))
             q.fetchall()
 
         :param query: The query string or an instance of :class:`db.Q`
@@ -296,4 +296,3 @@ class Query(object):
 
     def __repr__(self):
         return repr(self.__qset)
-
