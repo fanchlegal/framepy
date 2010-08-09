@@ -55,7 +55,7 @@ def init_logger():
         try:
             handler = logging.handlers.TimedRotatingFileHandler(
                 logfile, 'D', 1, 30)
-        except Exception:
+        except Exception, e:
             sys.stderr.write('ERROR: unable to create log file: %s' % str(e))
         else:
             formatter = logging.Formatter(format)
