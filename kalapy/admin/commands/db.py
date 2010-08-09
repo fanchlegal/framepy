@@ -28,7 +28,7 @@ try:
         if sys.stdout.isatty():
             text = highlight(text, lexer, formatter).strip()
         sys.stdout.write(text)
-        sys.stdout.write('\n')
+        sys.stdout.write('\n\n')
 
 #except ImportError:
 except:

@@ -90,14 +90,14 @@ class RelationalDatabase(IDatabase):
         # create columns
         output = [self.get_field_sql(f) for f in fields]
 
+        # generate unique constraints
+        for item in model._meta.unique:
+            output.append('UNIQUE(%s)' % ", ".join(['"%s"' % f.name for f in item]))
+
         # generate foreign key constraints
         for field in fields:
             if isinstance(field, ManyToOne):
                 output.append(self.get_fk_sql(field))
-
-        # generate unique constraints
-        for item in model._meta.unique:
-            output.append('UNIQUE(%s)' % ", ".join(['"%s"' % f.name for f in item]))
 
         output = ",\n    ".join(output)
         output = 'CREATE TABLE "%s" (\n    %s\n);' % (model._meta.table, output)
@@ -332,4 +332,3 @@ class QueryBuilder(object):
 
     def handle_lte(self, name, value):
         return '"%s" <= %%s' % (name)
-
