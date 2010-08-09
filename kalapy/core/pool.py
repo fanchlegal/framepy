@@ -10,7 +10,7 @@ provided by them.
 """
 from __future__ import absolute_import
 
-import os, sys, logging
+import re, os, sys, logging
 
 try:
     import threading
@@ -28,6 +28,9 @@ __all__ = ('pool',)
 
 
 logger = logging.getLogger('pool')
+
+
+_NAME_REGEX = re.compile('^((?:kalapy\.contrib\.)?(?:\w+)).*$')
 
 
 class Pool(object):
@@ -194,38 +197,22 @@ class Pool(object):
         name of a module provided by the package. For example::
 
             >>> pool.get_package('foo')
-            ... <package 'foo'>
+            ... <Package 'foo'>
             >>> pool.get_package('foo.models')
-            ... <package 'foo'>
+            ... <Package 'foo'>
             >>> pool.get_package('foo.views.submodule')
-            ... <package 'foo'>
+            ... <Package 'foo'>
             >>> pool.get_package('kalapy.contrib.sessions')
-            ... <package 'sessions'>
+            ... <Package 'sessions'>
 
         :param name: name of the package or name of a module provided by the package.
         """
-        return self.packages.get(self.get_package_name(name))
-
-    def get_package_name(self, name):
-        """Return the package name from the given module name.
-
-        This function takes care of ``kalapy.contrib`` packages returning
-        correct package name.
-
-            >>> pool.get_package_name('hello.models')
-            ... 'hello'
-            >>> pool.get_package_name('hello.views.foo')
-            ... 'hello'
-            >>> pool.get_package_name('kalapy.contrib.sessions.models')
-            ... 'sessions'
-            >>> pool.get_package_name('hello')
-            ... 'hello'
-
-        :param name: a string, package name or module name
-        """
-        if name.startswith('kalapy.contrib.'):
-            name = name[15:]
-        return name.split('.', 1)[0]
+        try:
+            name = _NAME_REGEX.match(name).group(1)
+        except:
+            raise TypeError(
+                _('Invalid package name: %(name)', name=name))
+        return self.packages.get(name)
 
     def get_static_paths(self):
         """Returns a maping of static directories provided by installed

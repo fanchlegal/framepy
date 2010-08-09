@@ -43,7 +43,7 @@ class PackageType(type):
     def from_view_function(cls, func):
         """A factory method to create package instance from the view function.
         """
-        return cls(pool.get_package_name(func.__module__))
+        return cls(func.__module__.split('.views', 1)[0])
 
 
 class Package(object):
@@ -64,7 +64,7 @@ class Package(object):
 
     def __init__(self, import_name):
 
-        self.name = pool.get_package_name(import_name)
+        self.name = import_name.rsplit('.', 1)[-1]
         self.path = os.path.abspath(
             os.path.dirname(sys.modules[import_name].__file__))
 
@@ -84,6 +84,9 @@ class Package(object):
 
         # template directory
         self._template_dir = os.path.join(self.path, 'templates')
+
+    def __repr__(self):
+        return "<%s '%s'>" % (self.__class__.__name__, self.name)
 
     @property
     def submount(self):
