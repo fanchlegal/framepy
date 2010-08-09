@@ -71,6 +71,10 @@ class Database(RelationalDatabase):
     def fix_quote(self, sql):
         return sql.replace('"', '`')
 
+    def get_create_sql(self, model):
+        sql = super(Database, self).get_create_sql(model)
+        return "%s ENGINE=`InnoDB`;" % (sql[:-1],)
+
     def exists_table(self, model):
         cursor = self.cursor()
         cursor.execute("""
@@ -83,4 +87,3 @@ class Database(RelationalDatabase):
     def lastrowid(self, cursor, model):
         cursor.execute('SELECT LAST_INSERT_ID()')
         return cursor.fetchone()[0]
-
