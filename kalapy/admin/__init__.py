@@ -12,8 +12,10 @@ import re, os, sys, types, getopt
 from werkzeug import find_modules, import_string
 
 try:
+    if sys.plateform in ('win32',):
+        raise
     from pygments.console import ansiformat
-except ImportError:
+except:
     def ansiformat(attr, s):
         return s
 

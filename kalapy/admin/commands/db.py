@@ -17,6 +17,8 @@ from kalapy.db.engines import database
 
 
 try:
+    if sys.plateform in ('win32',):
+        raise
     from pygments import highlight
     from pygments.lexers import get_lexer_for_mimetype
     from pygments.formatters import TerminalFormatter
