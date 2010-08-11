@@ -22,6 +22,7 @@ User's Guide
     package
     i18n
     gae
+    deploying
     admin
     settings
     license
