@@ -45,7 +45,7 @@ of current project.
 
 .. describe:: admin.py babel <action> [options] [package [package [...]]]
 
-Perform :doc:`i18n <i18n>` message catalog actions.
+Perform :doc:`i18n` message catalog actions.
 
 .. describe:: admin.py test [name [name [name [...]]]]
 
