@@ -17,7 +17,8 @@ provides extended features.
 See how the original wiki application looks like:
 
 .. image:: _static/wiki.png
-    :scale: 50%
+    :width: 70%
+    :scale: 100%
     :align: center
 
 Addon Package
@@ -41,7 +42,8 @@ touching it. See how the wiki application looks like after activating
 `wiki_extended` package:
 
 .. image:: _static/wiki-extended.png
-    :scale: 50%
+    :width: 70%
+    :scale: 100%
     :align: center
 
 You can see that the layout and look and feel is changed. Also note the search
