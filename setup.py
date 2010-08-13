@@ -1,3 +1,28 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+KalaPy
+~~~~~~
+
+*KalaPy* is a highly modular web application framework for Python.
+
+Features
+````````
+
+* Database Abstraction Layer
+* Web components based on `Werkzeug`
+* Templating support using `Jinja 2`
+* Internationalization support using `Babel` and `pytz`
+* Google App Engine support
+
+Links
+`````
+
+* `website <http://www.kalapy.org/>`_
+* `documentation <http://www.kalapy.org/docs/index.html>`_
+* `source code <http://github.com/cristatus/kalapy>`_
+
+"""
 import os, sys
 
 if sys.version_info < (2, 5):
@@ -16,6 +41,9 @@ try:
 except ImportError:
     setup_args = {}
 
+
+long_description = __doc__
+
 # import release meta data (version, author etc.)
 execfile(os.path.join("kalapy", "release.py"))
 
@@ -27,6 +55,7 @@ setup(
     author=author,
     author_email=author_email,
     description=description,
+    long_description=long_description,
     zip_safe=False,
     platforms='any',
     install_requires=[
