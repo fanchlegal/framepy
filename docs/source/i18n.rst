@@ -44,8 +44,8 @@ Standard Translations
 +++++++++++++++++++++
 
 You can specify a translation with function :func:`kalapy.i18n.gettext` which is
-aliased to ``\_()`` for convention. The alias ``\_()`` is installed as a
-``\__builtins__`` so that you can directly use ``\_()`` in your code without
+aliased to ``_()`` for convention. The alias ``_()`` is installed as a
+``__builtins__`` so that you can directly use ``_()`` in your code without
 importing it in your module.
 
 Here is an example of translating a python module::
