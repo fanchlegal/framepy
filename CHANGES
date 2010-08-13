@@ -3,6 +3,17 @@ KalaPy Changelog
 
 Here you can see the full list of changes between each KalaPy release.
 
+Version 0.4.1
+-------------
+
+Bugfix release, released on 13th August, 2010.
+
+* Added docs on deployement options.
+* Fixed terminal output issue on win32.
+* Fixed package name resolution issue.
+* Fixed MySQL engine (table with InnoDB engine).
+* Fixed logging (missing reference).
+
 Version 0.4
 -----------
 
