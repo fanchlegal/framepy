@@ -14,8 +14,8 @@ import os
 
 from jinja2.loaders import PrefixLoader, FileSystemLoader
 from werkzeug import SharedDataMiddleware, import_string
-from werkzeug.exceptions import HTTPException
-from werkzeug.routing import Rule, Map
+from werkzeug.exceptions import HTTPException, InternalServerError
+from werkzeug.routing import Rule
 
 from kalapy.conf import settings
 from kalapy.core import signals
@@ -235,12 +235,12 @@ class Application(object):
     def get_response(self, request):
         """Returns an :class:`Response` instance for the given `request` object.
         """
+        if request.routing_exception is not None:
+            raise request.routing_exception
+
         response = self.process_request(request)
         if response is not None:
             return response
-
-        if request.routing_exception is not None:
-            raise request.routing_exception
 
         func, args = request.view_func, request.view_args
         try:
@@ -286,9 +286,13 @@ class Application(object):
                     response = self.get_response(ctx.request)
                 except HTTPException, e:
                     response = e
+                    if e.code == 404 and self.debug and not len(pool.view_functions):
+                        response = self.make_response(WELCOME_PAGE)
                 except Exception, e:
                     signals.send('request-exception', error=e)
-                    raise
+                    if self.debug:
+                        raise
+                    response = InternalServerError()
                 response = self.process_response(request, response)
             finally:
                 signals.send('request-finished')
@@ -310,3 +314,67 @@ def simple_server(host='127.0.0.1', port=8080, use_reloader=False):
     # create a wsgi application
     app = Application()
     run_simple(host, port, app, use_reloader=use_reloader, use_debugger=app.debug)
+
+
+#: The welcome page, will be shown if there is no routing rules defined.
+WELCOME_PAGE = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Welcome to KalaPy</title>
+  <style type="text/css">
+    body { font: .9em serif; }
+    html * { padding: 0; margin: 0; }
+    body * { padding: 10px 20px; }
+    body * * { padding:0; }
+    div { border-bottom: 1px solid #ddd; }
+    a { color: #377BA8; }
+    a { text-decoration: none; }
+    a:hover { border-bottom: 1px solid #eee; }
+    h1 { font-weight: normal; color: #212224; text-shadow: white 0px 1px 0px; }
+    h2 { font-weight: normal; color: #666; }
+    ul { margin: 1em; margin-left: 2em; }
+    .welcome { background-color: #bed4eb; }
+    .help { background:#f6f6f6; }
+    .notes { background:#eee; }
+  </style>
+</head>
+<body>
+  <div class="welcome">
+    <h1>Welcome to KalaPy</h1>
+    <h2>Congratulations on your first KalaPy project...</h2>
+  </div>
+  <div class="help">
+    <p>You haven't done any work yet. Here's what to do next.</p>
+    <ul>
+      <li>Go to the project directory.</li>
+      <li>Edit the <code>settings.py</code> file as required.</li>
+      <li>
+        Create your first application package by running
+        <code>python ./admin.py startpackage [packagename]</code> command.
+      </li>
+      <li>
+        Define some routes in the <code>views.py</code> of your
+        application package.
+      </li>
+      <li>
+        Activate your package by appending it to <code>INSTALLED_PACKAGES</code>
+        settings.
+      </li>
+      <li>
+        Start the server with <code>python ./admin.py runserver</code> command.
+      </li>
+    </ul>
+    <p>
+      See <a href="http://www.kalapy.org/docs">KalaPy documentation</a> for
+      more information.
+    </p>
+  </div>
+  <div class="notes">
+    You are seeing this page because you have <code>DEBUG = True</code> in your
+    <code>settings.py</code> file and you haven't defined any routing rules.
+  </div>
+</body>
+</html>
+"""
