@@ -13,7 +13,7 @@ import os
 from werkzeug import import_string
 from werkzeug.local import LocalStack
 
-from kalapy.conf import settings
+from kalapy.conf import settings, ConfigError
 from kalapy.core import signals
 
 
@@ -23,16 +23,17 @@ __all__ = ('Database', 'DatabaseError', 'IntegrityError', 'database')
 if not settings.DATABASE_ENGINE:
     settings.DATABASE_ENGINE = 'dummy'
 
-_engine_dir = os.path.join(os.path.dirname(__file__), settings.DATABASE_ENGINE)
-if not os.path.exists(os.path.join(_engine_dir, '__init__.py')):
-    raise ValueError(
+engine = settings.DATABASE_ENGINE
+engine = engine if '.' in engine else 'kalapy.db.engines.%s' % engine
+
+try:
+    engine = import_string(engine)
+    Database = engine.Database
+    DatabaseError = engine.DatabaseError
+    IntegrityError = engine.IntegrityError
+except (ImportError, AttributeError):
+    raise ConfigError(
         _("Engine %(name)r not supported.", name=settings.DATABASE_ENGINE))
-
-engine = import_string('kalapy.db.engines.%s' % settings.DATABASE_ENGINE)
-
-Database = engine.Database
-DatabaseError = engine.DatabaseError
-IntegrityError = engine.IntegrityError
 
 
 class Connection(object):
