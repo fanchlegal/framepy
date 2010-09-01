@@ -65,12 +65,23 @@ def check_name(name):
     """
     if not re.match('^[_a-zA-Z]\w*$', name):
         raise CommandError("Invalid name '%s'" % name)
+
+    # make sure there is no such contrib package
+    try:
+        __import__('kalapy.contrib.%s' % name)
+    except ImportError:
+        pass
+    else:
+        raise CommandError(
+            _('Name conflicts with \'kalapy.contrib.%(name)s\' package.', name=name))
+
     try:
         __import__(name)
     except ImportError:
         return name
     else:
-        raise CommandError('name conflicts with an existing python module.')
+        raise CommandError(
+            _('Name conflicts with an existing python module.'))
 
 
 class StartProject(Command):
