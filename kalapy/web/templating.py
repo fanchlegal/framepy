@@ -112,3 +112,14 @@ def render_template(template, **context):
     ctx = _request_context
     template = '%s:%s' % (ctx.request.package, template)
     return ctx.current_app.jinja_env.get_template(template).render(context)
+
+def render_template_string(template, **context):
+    """Render the template string with the the given context.
+
+    :param template: the jinj2 template as string.
+    :param context: the variables that should be available in the context
+                    of the template.
+
+    :returns: string generated after rendering the template
+    """
+    return ctx.current_app.jinja_env.from_string(template).render(context)
