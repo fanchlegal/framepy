@@ -12,6 +12,12 @@ import os, types
 from kalapy.conf import global_settings
 
 
+class ConfigError(Exception):
+    """Exception class for invalid configuration settings.
+    """
+    pass
+
+
 class Settings(object):
     """Settings class holds package settings.
     """

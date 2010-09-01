@@ -20,6 +20,7 @@ except:
         return s
 
 from kalapy import get_version
+from kalapy.conf import settings, ConfigError
 
 
 __all__ = ('CommandError', 'Command', 'ActionCommand', 'Main',
@@ -72,6 +73,7 @@ class Options(object):
             except:
                 pass
             raise
+
 
 class Parser(object):
     """Command parser. It prepares short & long options from the options
@@ -170,10 +172,20 @@ class CommandType(type):
         """Comman script scope, tells if the script being invoked from the
         project directory or not.
         """
-        from kalapy.conf import settings
         if settings.PROJECT_NAME:
             return 'project'
         return None
+
+
+def format_error(e):
+    """Colorize the error message.
+    """
+    if not isinstance(e, basestring):
+        e = '%s' % e
+    if not e.startswith('Error:'):
+        e = 'Error: %s' % e
+    return ansiformat('*red*', e)
+
 
 class Command(object):
     """Base command class. Every subclass of the command class should
@@ -250,11 +262,7 @@ class Command(object):
     def error(self, msg):
         """Print the given error message and exit.
         """
-        if not isinstance(msg, basestring):
-            msg = '%s' % msg
-        if not msg.startswith('Error:'):
-            msg = 'Error: %s' % msg
-        print ansiformat('*red*', msg)
+        print format_error(msg)
         sys.exit(1)
 
     def print_help(self):
@@ -378,6 +386,10 @@ class Main(object):
         print 'use "%s help <command>" for more details on a command' % self.prog
         sys.exit(1)
 
+    def print_error(self, e):
+        print format_error(e)
+        sys.exit(1)
+
     def run(self, args=None):
         args = args or sys.argv[1:]
 
@@ -409,16 +421,16 @@ class Main(object):
 
         try:
             command = REGISTRY[cmd]
-            command().run(args)
         except KeyError:
-            print ansiformat('*red*', 'Error: No such command %r.' % cmd)
+            self.print_error('Error: No such command %r.' % cmd)
+        else:
+            command().run(args)
 
 
 def setup_environment(settings_mod):
     """Prepare the runtime environment. Used by project 'admin.py' script.
     It will update the configuration settings and load the project.
     """
-    from kalapy.conf import settings
     project_dir = os.path.dirname(os.path.abspath(settings_mod.__file__))
     settings.update(settings_mod, project_dir=project_dir)
 
@@ -431,6 +443,9 @@ def execute_command(args=None, settings_mod=None):
     :param args: command arguments ([cmd, arg1, arg2, ...])
     :param settings_mod: settings module
     """
-    if settings_mod:
-        setup_environment(settings_mod)
-    Main().run(args)
+    try:
+        if settings_mod:
+            setup_environment(settings_mod)
+        Main().run(args)
+    except ConfigError, e:
+        print format_error(e)
