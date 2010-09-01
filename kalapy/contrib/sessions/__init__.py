@@ -45,9 +45,13 @@ class SessionMiddleware(Middleware):
         request.flashes = flashes
 
     def process_response(self, request, response):
-        session = request.session
-        if session.should_save:
-            self.store.save(session)
-            response.set_cookie(
-                self.cookie_name, session.sid,
-                max_age=self.cookie_age)
+        try:
+            session = request.session
+        except AttributeError:
+            pass
+        else:
+            if session.should_save:
+                self.store.save(session)
+                response.set_cookie(
+                    self.cookie_name, session.sid,
+                    max_age=self.cookie_age)
