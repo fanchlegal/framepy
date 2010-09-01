@@ -16,7 +16,7 @@ DATABASE_ENGINE = "sqlite3"
 # Database name
 # For sqlite3 use path to the sqlite3 database file
 # For gae keep empty
-DATABASE_NAME = "test_${name_lower}.db"
+DATABASE_NAME = "" #"test_${name_lower}.db"
 
 # Database user (must have rights to create database tables)
 # Keep empty for sqlite3 and gae
