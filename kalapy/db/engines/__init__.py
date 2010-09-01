@@ -76,28 +76,32 @@ def rollback():
     """
     database.rollback()
 
+
 def run_in_transaction(func, *args, **kw):
     """A helper function to run the specified func in a transaction.
     """
     return database.run_in_transaction(func, *args, **kw)
 
-@signals.connect('request-started')
+
 def open_connection():
     """Open database connection when request started.
     """
     database.connect()
 
 
-@signals.connect('request-finished')
 def close_connection():
     """Close database connection when request ends.
     """
     database.close()
 
-
-@signals.connect('request-exception')
 def rollback_connection(error):
     """Rollback database connection, if there is any unhandled exception
     during request processing.
     """
     database.rollback()
+
+# only register signals if database is configured.
+if settings.DATABASE_NAME:
+    signals.connect('request-started')(open_connection)
+    signals.connect('request-finished')(close_connection)
+    signals.connect('request-exception')(rollback_connection)
