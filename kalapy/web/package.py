@@ -140,7 +140,8 @@ class Package(object):
             rule = '%s%s' % (self.submount, rule)
 
         pool.url_map.add(Rule(rule, **options))
-        pool.view_functions[endpoint] = func
+        if func is not None:
+            pool.view_functions[endpoint] = func
 
     def route(self, rule, **options):
         """Same as :func:`route`
