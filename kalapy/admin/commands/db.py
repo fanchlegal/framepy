@@ -17,7 +17,7 @@ from kalapy.db.engines import database
 
 
 try:
-    if sys.plateform in ('win32',):
+    if sys.platform in ('win32',):
         raise
     from pygments import highlight
     from pygments.lexers import get_lexer_for_mimetype
@@ -32,7 +32,6 @@ try:
         sys.stdout.write(text)
         sys.stdout.write('\n\n')
 
-#except ImportError:
 except:
     def print_colorized(text):
         sys.stdout.write(text)
