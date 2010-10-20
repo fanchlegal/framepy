@@ -21,7 +21,7 @@ class Store(SessionStore):
         super(Store, self).__init__(session_class)
 
     def get_session(self, sid):
-        obj = Session.all().filter('sid == :sid', sid=sid).fetch(1)
+        obj = Session.all().filter('sid ==', sid).fetch(1)
         return obj[0] if obj else None
 
     def save(self, session):
@@ -51,4 +51,3 @@ class Store(SessionStore):
 
     def list(self):
         return Session.select('sid').fetch(-1)
-
