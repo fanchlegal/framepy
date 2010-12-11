@@ -3,6 +3,18 @@ KalaPy Changelog
 
 Here you can see the full list of changes between each KalaPy release.
 
+Version 0.4.2
+-------------
+
+Bugfix release, released on 11th December, 2010.
+
+* Fixed database session store.
+* Imporved database engine loading.
+* Improved error handling.
+* Fixed session middleware (attribute error).
+* Fixed package.add_rule (register view func only if given).
+* Connect signals only if database is configured.
+
 Version 0.4.1
 -------------
 
