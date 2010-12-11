@@ -1,10 +1,10 @@
-# Settings for foo package
-
 #: Name of the package.
-NAME = "foo"
+NAME = "wiki_extended"
 
 #: Package description.
 DESCRIPTION = """
+An example addon package to extend the wiki package. The resources provided
+by this package will be available as resources of the wiki package.
 """
 
 #: Package version string.
@@ -14,12 +14,7 @@ VERSION = "1.0"
 #: In that case this package is considered an addon package
 #: and resources provided by this package will be served as
 #: the resources of extending package.
-EXTENDS = None
+EXTENDS = 'wiki'
 
 #: Other packages this package depends on.
 DEPENDS = None
-
-#: Submount to be used to mount this package.
-#: For example, '/wiki', '/blog' etc.
-SUBMOUNT = '/foo'
-

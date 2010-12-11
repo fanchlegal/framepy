@@ -100,3 +100,15 @@ INSTALLED_PACKAGES = (
     'wiki',
     'wiki_extended',
 )
+
+# Additional routing options for the installed packages.
+#
+# For Example::
+#
+#   ROUTING_OPTIONS = {
+#       'wiki': {'submount': '/wiki'},
+#   }
+#
+ROUTING_OPTIONS = {
+    'wiki': {'submount': '/wiki'},
+}

@@ -84,3 +84,16 @@ INSTALLED_PACKAGES = (
     'foo_extended',
     'bar',
 )
+
+# Additional routing options for the installed packages.
+#
+# For Example::
+#
+#   ROUTING_OPTIONS = {
+#       'wiki': {'submount': '/wiki'},
+#   }
+#
+ROUTING_OPTIONS = {
+    'foo': dict(submount='/foo'),
+    'bar': dict(submount='/bar'),
+}

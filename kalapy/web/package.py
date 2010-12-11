@@ -18,7 +18,7 @@ except ImportError:
 from werkzeug import find_modules, import_string
 from werkzeug.routing import Rule
 
-from kalapy.conf import Settings, settings, package_settings
+from kalapy.conf import settings
 from kalapy.utils.containers import OrderedDict
 from kalapy.core.pool import pool
 
@@ -59,8 +59,8 @@ class Package(object):
     """
     __metaclass__ = PackageType
 
-    #: Package settings
-    settings = None
+    #: Package information.
+    __info__ = None
 
     def __init__(self, import_name):
 
@@ -68,12 +68,11 @@ class Package(object):
         self.path = os.path.abspath(
             os.path.dirname(sys.modules[import_name].__file__))
 
-        options = dict(NAME=self.name)
+        self.__info__ = dict(NAME=self.name)
         try:
-            execfile(os.path.join(self.path, 'settings.py'), {}, options)
+            execfile(os.path.join(self.path, '__kalapy__.py'), {}, self.__info__)
         except IOError:
             pass
-        self.settings = Settings(package_settings, **options)
 
         # static directory
         self._static_dir = os.path.join(self.path, 'static')
@@ -93,18 +92,36 @@ class Package(object):
         """Submount for the package. If this is an addon package then it is
         the same as the extending package.
         """
-        if self.settings.EXTENDS:
-            return self.package.submount
-        return self.settings.SUBMOUNT
+        try:
+            return settings.ROUTING_OPTIONS[self.package.name]['submount']
+        except KeyError:
+            pass
+        return None
+
+    @property
+    def extends(self):
+        try:
+            return self.__info__['EXTENDS']
+        except KeyError:
+            pass
+        return None
+
+    @property
+    def depends(self):
+        try:
+            return self.__info__['DEPENDS']
+        except KeyError:
+            pass
+        return None
 
     @property
     def package(self):
         """The parent package this package is extending otherwise the self.
         """
-        if self.settings.EXTENDS:
-            assert self.settings.EXTENDS in settings.INSTALLED_PACKAGES, \
-                "no such package installed: %s" % self.settings.EXTENDS
-            return Package(self.settings.EXTENDS)
+        if self.extends:
+            assert self.extends in settings.INSTALLED_PACKAGES, \
+                "no such package installed: %s" % self.EXTENDS
+            return Package(self.extends)
         return self
 
     @property

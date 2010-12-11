@@ -1,7 +1,5 @@
-# Settings for ${name} package
-
 #: Name of the package.
-NAME = "${name}"
+NAME = "core"
 
 #: Package description.
 DESCRIPTION = """
@@ -18,7 +16,3 @@ EXTENDS = None
 
 #: Other packages this package depends on.
 DEPENDS = None
-
-#: Submount to be used to mount this package.
-#: For example, '/wiki', '/blog' etc.
-SUBMOUNT = None

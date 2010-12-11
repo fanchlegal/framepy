@@ -103,3 +103,14 @@ STATIC_LINKS = {
 INSTALLED_PACKAGES = (
     'kalapy.contrib.sessions',
 )
+
+# Additional routing options for the installed packages.
+#
+# For Example::
+#
+#   ROUTING_OPTIONS = {
+#       'wiki': {'submount': '/wiki'},
+#   }
+#
+ROUTING_OPTIONS = {
+}
