@@ -163,18 +163,8 @@ class CommandType(type):
                 if opt not in options:
                     options.append(opt)
         cls.options = tuple(options)
-
-        if cls.name and cls.scope == cls.current_scope:
+        if cls.name:
             REGISTRY[cls.name] = cls
-
-    @property
-    def current_scope(cls):
-        """Comman script scope, tells if the script being invoked from the
-        project directory or not.
-        """
-        if settings.PROJECT_NAME:
-            return 'project'
-        return None
 
 
 def format_error(e):
@@ -217,9 +207,6 @@ class Command(object):
 
     #: usage string (single line only)
     usage = "%name [options] [args]"
-
-    #: command execution scope, project or None, if None then execute anywhere
-    scope = "project"
 
     #: options list (short, long, default, help)
     options = (

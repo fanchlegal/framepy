@@ -87,10 +87,8 @@ def check_name(name):
 class StartProject(Command):
     """Create a KalaPy project with the given project name in the current directory.
     """
-    name = "project"
+    name = ""
     usage = "<project>"
-
-    scope = None
 
     def execute(self, options, args):
         try:
