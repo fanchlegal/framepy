@@ -1,11 +1,5 @@
 # Settings for example project
 
-# Name of the project
-PROJECT_NAME = "example"
-
-# Version of the project
-PROJECT_VERSION = "1.0"
-
 # Enable/Disable debug mode
 DEBUG = True
 

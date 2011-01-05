@@ -1,11 +1,5 @@
 # Settings for tests project
 
-# Name of the project
-PROJECT_NAME = "tests"
-
-# Version of the project
-PROJECT_VERSION = "1.0"
-
 # Enable/Disable debug mode
 DEBUG = True
 

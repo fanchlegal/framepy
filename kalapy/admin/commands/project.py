@@ -136,6 +136,7 @@ class GAEProject(ActionCommand):
         ('a', 'address', 'localhost', 'hostname for the appserver'),
         ('p', 'port', '8080', 'port number for the appserver'),
         ('i', 'install', False, 'install libs (extra libs as arguments)'),
+        ('n', 'name', '', 'appengine application name'),
     )
 
     def setup_stubs(self, options):
@@ -171,7 +172,9 @@ class GAEProject(ActionCommand):
         """prepare this project for google appengine.
         """
         from kalapy.conf import settings
-        name = settings.PROJECT_NAME
+        if not options.name:
+            self.error('please provide application name')
+        name = options.name
         context = {'appname': name.lower(), 'name': name}
         if not os.path.exists('app.yaml') and options.verbose:
             print "Creating app.yaml..."
